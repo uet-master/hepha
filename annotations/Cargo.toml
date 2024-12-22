@@ -1,0 +1,12 @@
+[package]
+
+name = "contract-analysis-annotations"
+version = "1.0.0"
+license = "MIT"
+edition = "2021"
+
+[lib]
+test = false # we have no unit tests
+doctest = false # and no doc tests
+
+[dependencies]

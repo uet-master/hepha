@@ -1,0 +1,72 @@
+[package]
+name = "contract-analysis"
+version = "1.0.0"
+license = "MIT"
+edition = "2021"
+build = "build.rs"
+
+[lib]
+test = false # we have no unit tests
+doctest = false # and no doc tests
+
+[[bin]]
+name = "cargo-mirai"
+path = "src/cargo_mirai.rs"
+test = false # we have no unit tests
+doctest = false # and no doc tests
+
+[[bin]]
+name = "mirai"
+path = "src/main.rs"
+test = false # we have no unit tests
+doctest = false # and no doc tests
+
+[dependencies]
+bincode = { version = "*", features = ["i128"] }
+cargo_metadata = "*"
+clap = "*"
+env_logger = "*"
+fs2 = "*"
+itertools = "*"
+lazy_static = "*"
+log = "*"
+log-derive = "*"
+mirai-annotations = { path = "../annotations" }
+petgraph = "*"
+proc-macro2 = "*"
+rand = "*"
+rayon = "*"
+regex = "*"
+rpds = { version = "*", features = ["serde"] }
+rustc_tools_util = "*"
+serde = { version = "*", features = ["derive", "alloc", "rc"] }
+serde_json = "*"
+shellwords = "*"
+sled = "*"
+tar = "*"
+tempfile = "*"
+z3-sys = { version = "*", git = "https://github.com/prove-rs/z3.rs.git", rev = "cb10013a2a0a017048b1d218bc734afa390f34ff", optional = true }
+
+[dev-dependencies]
+walkdir = "*"
+
+# Dependencies for tests which aren't already included by the checker.
+# Note if you add one here it also needs to be added to the command line
+# of the cargo command using it, e.g.
+# `--extern contracts=$PROJECT_DIR$/target/debug/deps/libcontracts-c8ea818f33e46907.dylib`
+# or similar, and to integration_tests.rs (search for extern_deps there).
+# We set the dep to a specific revision, so we don't get paths as above no longer working after update of the repo
+# and the Cargo.lock.
+contracts = { version = "*", features = ["mirai_assertions"] }
+
+[features]
+default = ["bundled"]
+vcpkg = ["z3-sys/vcpkg", "z3"]
+bundled = ["z3-sys/bundled", "z3"]
+z3 = []
+
+[package.metadata.rust-analyzer]
+# This crate uses #[feature(rustc_private)]
+# https://rust-analyzer.github.io/manual.html#rust-analyzer.rustc.source
+rustc_private = true
+
