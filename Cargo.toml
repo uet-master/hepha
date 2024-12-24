@@ -1,0 +1,20 @@
+[workspace]
+resolver = "2"
+
+members = [
+    "annotations",
+    "checker",
+    "standard_contracts",
+    "examples/taint",
+    "examples/shopping_cart",
+    "examples/tag_analysis/timing_channels",
+    "examples/tag_analysis/untrustworthy_inputs",
+    "examples/tag_analysis/verification_status",
+    "examples/tag_analysis/trait_methods",
+]
+
+[profile.release]
+debug = true
+
+[profile.bench]
+debug = true
