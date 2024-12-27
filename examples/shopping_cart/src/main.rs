@@ -90,13 +90,23 @@ impl ShoppingCart {
     }
 
     pub fn compare(secret: &[i32], public: &[i32], len: usize) -> bool {
-      for i in 0..len {
-          if secret[i] != public[i] {
-              return false;
-          }
-      }
-      true
-  }
+        for i in 0..len {
+            if secret[i] != public[i] {
+                return false;
+            }
+        }
+        true
+    }
+
+    pub fn unreachable_comparison(x: i32) {
+        if x > 0 {
+            if x + 10 > 15 {
+                println!("Condition met: x + 10 > 15");
+            } else {
+                println!("Condition not met: x + 10 <= 15");
+            }
+        }
+    }
 }
 
 // A main entry point which violates conditions.

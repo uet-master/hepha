@@ -123,7 +123,6 @@ impl<'compilation> CrateVisitor<'compilation, '_> {
                 info!("analyzing function {}", name);
             }
 
-            info!("Hello the info");
             self.call_graph.add_croot(def_id);
             self.analyze_body(def_id);
             if start_instant.elapsed().as_secs() > self.options.max_analysis_time_for_crate {
@@ -172,7 +171,7 @@ impl<'compilation> CrateVisitor<'compilation, '_> {
     /// Run the abstract interpreter over the function body and produce a summary of its effects
     /// and collect any diagnostics into the buffer.
     #[logfn(TRACE)]
-    fn analyze_body(&mut self, def_id: DefId) {
+    fn  analyze_body(&mut self, def_id: DefId) {
         let mut diagnostics: Vec<Diag<'compilation, ()>> = Vec::new();
         let mut active_calls_map: HashMap<DefId, u64> = HashMap::new();
         let mut body_visitor = BodyVisitor::new(
@@ -192,9 +191,8 @@ impl<'compilation> CrateVisitor<'compilation, '_> {
             self.summary_cache
                 .set_summary_for(def_id, self.tcx, summary.clone());
         }
-
-        info!("Summary: {:?}, Diagnostics: {:?}", summary.clone(), diagnostics);
         let old_diags = self.diagnostics_for.insert(def_id, diagnostics);
+        // info!("Summary: {:?}, Old_diags: {:?}", summary.clone(), old_diags);
         checked_assume!(old_diags.is_none());
     }
 
@@ -289,6 +287,8 @@ impl<'compilation> CrateVisitor<'compilation, '_> {
                     Ordering::Equal
                 }
             }
+
+            info!("Emitted diagnostics: {:?}", diagnostics);
             diagnostics.sort_by(compare_diagnostics);
             for d in diagnostics.into_iter() {
                 d.emit()

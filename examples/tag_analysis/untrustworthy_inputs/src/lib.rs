@@ -98,4 +98,17 @@ pub mod verified_public_keys {
         };
         verify!(does_not_have_tag!(&key, crate::Tainted) || has_tag!(&key, crate::Sanitized));
     }
+
+    pub fn unreachable_comparison(x: i32) {
+      add_tag!(&x, crate::Tainted);
+      if x > 0 {
+            if x + 10 > 15 {
+                println!("Condition met: x + 10 > 15");
+            } else {
+                println!("Condition not met: x + 10 <= 15");
+            }
+      }
+
+      postcondition!(has_tag!(&x, crate::Tainted));
+  }
 }

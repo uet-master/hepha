@@ -1241,6 +1241,7 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
             let message =
                 "this is unreachable, mark it as such by using the verify_unreachable! macro";
             let warning = self.bv.cv.session.dcx().struct_span_warn(span, message);
+            info!("This warning {:?}", warning);
             self.bv.emit_diagnostic(warning);
             return None;
         }
