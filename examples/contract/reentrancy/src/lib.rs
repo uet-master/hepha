@@ -16,22 +16,21 @@ pub fn process_instruction(
 ) -> ProgramResult {
     let account_info_iter = &mut accounts.iter();
     let user_account = next_account_info(account_info_iter)?;
+    let contract_account = next_account_info(account_info_iter)?;
 
-    if user_account.is_signer {
-        msg!("Reentrant call detected!");
-        return Err(ProgramError::Custom(0));
+    if instruction_data.is_empty() {
+        return Err(ProgramError::InvalidInstructionData);
     }
 
-    let balance_before = user_account.lamports();
-    msg!("User balance before: {}", balance_before);
+    let withdraw_amount = u64::from_le_bytes(instruction_data[0..9].try_into().unwrap());
 
-    let amount_to_withdraw = 1_000;
-    **user_account.try_borrow_mut_lamports()? -= amount_to_withdraw;
+    if **contract_account.try_borrow_lamports()? < withdraw_amount {
+        return Err(ProgramError::InsufficientFunds);
+    }
 
-    msg!("Attempting reentrant call...");
+    **contract_account.try_borrow_mut_lamports()? -= withdraw_amount;
+    **user_account.try_borrow_mut_lamports()? += withdraw_amount;
 
-    let balance_after = user_account.lamports();
-    msg!("User balance after: {}", balance_after);
-
+    msg!("Withdrawal successful: {} lamports", withdraw_amount);
     Ok(())
 }

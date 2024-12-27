@@ -11,7 +11,7 @@ members = [
     "examples/tag_analysis/untrustworthy_inputs",
     "examples/tag_analysis/verification_status",
     "examples/tag_analysis/trait_methods", 
-    "examples/contract/reentrancy"
+    "examples/contract/reentrancy", "examples/contract/attack"
 ]
 
 [profile.release]

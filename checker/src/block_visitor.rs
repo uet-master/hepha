@@ -739,7 +739,7 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
         call_visitor.callee_fun_val = func_to_call;
         call_visitor.function_constant_args = func_const_args;
         call_visitor.initial_type_cache = adt_map;
-        trace!("calling func {:?}", call_visitor.callee_func_ref);
+        info!("calling func {:?}", call_visitor.callee_func_ref);
         if call_visitor.handled_as_special_function_call() {
             return;
         }
