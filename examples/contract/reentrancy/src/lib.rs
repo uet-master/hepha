@@ -6,86 +6,79 @@ use solana_program::{
     program_error::ProgramError,
     pubkey::Pubkey,
 };
+use std::collections::HashMap;
+
+#[derive(Default)]
+pub struct DepositContract {
+    pub deposits: HashMap<Pubkey, u64>, // Key: User account, Value: Deposited tokens
+}
+
+impl DepositContract {
+    pub fn deposit(&mut self, user: Pubkey, amount: u64) {
+        let entry = self.deposits.entry(user).or_insert(0);
+        *entry += amount;
+    }
+
+    pub fn withdraw(&mut self, user: &Pubkey, amount: u64) -> Result<(), ProgramError> {
+        let balance = self.deposits.get_mut(user).ok_or(ProgramError::InvalidAccountData)?;
+        if *balance < amount {
+            msg!("Insufficient balance for withdrawal");
+            return Err(ProgramError::InsufficientFunds);
+        }
+        *balance -= amount;
+        Ok(())
+    }
+
+    pub fn get_balance(&self, user: &Pubkey) -> u64 {
+        *self.deposits.get(user).unwrap_or(&0)
+    }
+}
 
 entrypoint!(process_instruction);
 
 pub fn process_instruction(
-    program_id: &Pubkey,
+    _program_id: &Pubkey,
     accounts: &[AccountInfo],
     instruction_data: &[u8],
 ) -> ProgramResult {
-    let account_info_iter = &mut accounts.iter();
-    let user_account = next_account_info(account_info_iter)?;
-    let contract_account = next_account_info(account_info_iter)?;
-    let state_account = next_account_info(account_info_iter)?;
+    let accounts_iter = &mut accounts.iter();
+    let user_account = next_account_info(accounts_iter)?;
+    let contract_account = next_account_info(accounts_iter)?;
 
-    if !state_account.is_writable || state_account.owner != program_id {
-        return Err(ProgramError::InvalidAccountData);
-    }
-
-    if instruction_data.is_empty() {
-        return Err(ProgramError::InvalidInstructionData);
+    if !user_account.is_signer {
+        msg!("User account must sign the transaction");
+        return Err(ProgramError::MissingRequiredSignature);
     }
 
     let instruction = instruction_data[0];
+    let amount = u64::from_le_bytes(instruction_data[1..9].try_into().unwrap());
+    let mut deposit_contract = DepositContract::default();
+
     match instruction {
-        0 => deposit(user_account, contract_account, state_account, instruction_data),
-        1 => withdraw(user_account, contract_account, state_account, instruction_data),
-        _ => Err(ProgramError::InvalidInstructionData),
-    }
-}
-
-fn deposit(
-    user_account: &AccountInfo,
-    contract_account: &AccountInfo,
-    state_account: &AccountInfo,
-    instruction_data: &[u8]
-) -> ProgramResult {
-    let deposit_amount = u64::from_le_bytes(instruction_data[1..9].try_into().unwrap());
-
-    if **user_account.try_borrow_lamports()? < deposit_amount {
-        return Err(ProgramError::InsufficientFunds);
-    }
-
-    **user_account.try_borrow_mut_lamports()? -= deposit_amount;
-    **contract_account.try_borrow_mut_lamports()? += deposit_amount;
-
-    // Update the new balance for the 
-    let mut state_data = state_account.try_borrow_mut_data()?;
-    let total_deposited = u64::from_le_bytes(state_data[0..8].try_into().unwrap());
-    let updated_total = total_deposited + deposit_amount;
-    state_data[0..8].copy_from_slice(&updated_total.to_le_bytes());
-
-    msg!("Deposit successful: {} lamports", deposit_amount);
-    msg!("Total deposited: {} lamports", updated_total);
-    Ok(())
-}
-
-fn withdraw(
-    user_account: &AccountInfo,
-    contract_account: &AccountInfo,
-    state_account: &AccountInfo,
-    instruction_data: &[u8]
-) -> ProgramResult {
-    if instruction_data.len() < 9 {
-        return Err(ProgramError::InvalidInstructionData);
+        0 => {
+            msg!("User deposits {} lamports", amount);
+            deposit_contract.deposit(*user_account.key, amount);
+            **user_account.try_borrow_mut_lamports()? -= amount;
+            **contract_account.try_borrow_mut_lamports()? += amount;
+        }
+        1 => {
+            msg!("User withdraws {} lamports", amount);
+            **contract_account.try_borrow_mut_lamports()? -= amount;
+            **user_account.try_borrow_mut_lamports()? += amount;
+            deposit_contract.withdraw(user_account.key, amount)?;
+        }
+        _ => {
+            msg!("Invalid action");
+            return Err(ProgramError::InvalidInstructionData);
+        }
     }
 
-    let withdraw_amount = u64::from_le_bytes(instruction_data[1..9].try_into().unwrap());
+    let balance = deposit_contract.get_balance(user_account.key);
+    msg!(
+        "User {} has a remaining balance of {} lamports",
+        user_account.key,
+        balance
+    );
 
-    if **contract_account.try_borrow_lamports()? < withdraw_amount {
-        return Err(ProgramError::InsufficientFunds);
-    }
-
-    **contract_account.try_borrow_mut_lamports()? -= withdraw_amount;
-    **user_account.try_borrow_mut_lamports()? += withdraw_amount;
-
-    let mut state_data = state_account.try_borrow_mut_data()?;
-    let total_withdrawn = u64::from_le_bytes(state_data[8..16].try_into().unwrap());
-    let updated_total = total_withdrawn + withdraw_amount;
-    state_data[8..16].copy_from_slice(&updated_total.to_le_bytes());
-
-    msg!("Withdrawal successful: {} lamports", withdraw_amount);
-    msg!("Total withdrawn: {} lamports", updated_total);
     Ok(())
 }
