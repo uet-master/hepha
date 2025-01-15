@@ -86,6 +86,10 @@ impl<'fixed, 'analysis, 'compilation, 'tcx>
                 }
             }
         }
+
+        // Check if the analyzed body contains reentrancy
+        info!("Check the reentrancy here !!!");
+        self.bv.check_for_reentrancy();
     }
 
     /// Visits a single basic block, starting with an in_state that is the join of all of

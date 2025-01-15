@@ -8,32 +8,6 @@ use solana_program::{
 };
 use std::collections::HashMap;
 
-#[derive(Default)]
-pub struct DepositContract {
-    pub deposits: HashMap<Pubkey, u64>, // Key: User account, Value: Deposited tokens
-}
-
-impl DepositContract {
-    pub fn deposit(&mut self, user: Pubkey, amount: u64) {
-        let entry = self.deposits.entry(user).or_insert(0);
-        *entry += amount;
-    }
-
-    pub fn withdraw(&mut self, user: &Pubkey, amount: u64) -> Result<(), ProgramError> {
-        let balance = self.deposits.get_mut(user).ok_or(ProgramError::InvalidAccountData)?;
-        if *balance < amount {
-            msg!("Insufficient balance for withdrawal");
-            return Err(ProgramError::InsufficientFunds);
-        }
-        *balance -= amount;
-        Ok(())
-    }
-
-    pub fn get_balance(&self, user: &Pubkey) -> u64 {
-        *self.deposits.get(user).unwrap_or(&0)
-    }
-}
-
 entrypoint!(process_instruction);
 
 pub fn process_instruction(
@@ -45,6 +19,8 @@ pub fn process_instruction(
     let user_account = next_account_info(accounts_iter)?;
     let contract_account = next_account_info(accounts_iter)?;
 
+    let mut balances: HashMap<Pubkey, u64> = HashMap::new();
+
     if !user_account.is_signer {
         msg!("User account must sign the transaction");
         return Err(ProgramError::MissingRequiredSignature);
@@ -52,20 +28,15 @@ pub fn process_instruction(
 
     let instruction = instruction_data[0];
     let amount = u64::from_le_bytes(instruction_data[1..9].try_into().unwrap());
-    let mut deposit_contract = DepositContract::default();
 
     match instruction {
         0 => {
             msg!("User deposits {} lamports", amount);
-            deposit_contract.deposit(*user_account.key, amount);
-            **user_account.try_borrow_mut_lamports()? -= amount;
-            **contract_account.try_borrow_mut_lamports()? += amount;
+            deposit(&mut balances, *user_account.key, amount, user_account, contract_account)?;
         }
         1 => {
             msg!("User withdraws {} lamports", amount);
-            **contract_account.try_borrow_mut_lamports()? -= amount;
-            **user_account.try_borrow_mut_lamports()? += amount;
-            deposit_contract.withdraw(user_account.key, amount)?;
+            withdraw(&mut balances, user_account.key, amount, user_account, contract_account)?;
         }
         _ => {
             msg!("Invalid action");
@@ -73,7 +44,7 @@ pub fn process_instruction(
         }
     }
 
-    let balance = deposit_contract.get_balance(user_account.key);
+    let balance = get_balance(&mut balances, user_account.key);
     msg!(
         "User {} has a remaining balance of {} lamports",
         user_account.key,
@@ -81,4 +52,42 @@ pub fn process_instruction(
     );
 
     Ok(())
+}
+
+pub fn deposit(
+    balances: &mut HashMap<Pubkey, u64>, 
+    user: Pubkey, 
+    amount: u64,
+    user_account: &AccountInfo,
+    contract_account: &AccountInfo
+) -> Result<(), ProgramError>  {
+    let entry = balances.entry(user).or_insert(0);
+    *entry += amount;
+    
+    **user_account.try_borrow_mut_lamports()? -= amount;
+    **contract_account.try_borrow_mut_lamports()? += amount;
+    Ok(())
+}
+
+pub fn withdraw(
+    balances: &mut HashMap<Pubkey, u64>,  
+    user: &Pubkey, 
+    amount: u64,
+    user_account: &AccountInfo,
+    contract_account: &AccountInfo
+) -> Result<(), ProgramError> {
+    let balance = balances.get_mut(user).ok_or(ProgramError::InvalidAccountData)?;
+    if *balance < amount {
+        msg!("Insufficient balance for withdrawal");
+        return Err(ProgramError::InsufficientFunds);
+    }
+    **contract_account.try_borrow_mut_lamports()? -= amount;
+    **user_account.try_borrow_mut_lamports()? += amount;
+
+    *balance -= amount;
+    Ok(())
+}
+
+pub fn get_balance(balances: &mut HashMap<Pubkey, u64>, user: &Pubkey) -> u64 {
+    *balances.get(user).unwrap_or(&0)
 }

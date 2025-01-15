@@ -171,7 +171,7 @@ impl<'compilation> CrateVisitor<'compilation, '_> {
     /// Run the abstract interpreter over the function body and produce a summary of its effects
     /// and collect any diagnostics into the buffer.
     #[logfn(TRACE)]
-    fn  analyze_body(&mut self, def_id: DefId) {
+    fn analyze_body(&mut self, def_id: DefId) {
         let mut diagnostics: Vec<Diag<'compilation, ()>> = Vec::new();
         let mut active_calls_map: HashMap<DefId, u64> = HashMap::new();
         let mut body_visitor = BodyVisitor::new(
