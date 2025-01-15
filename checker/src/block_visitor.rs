@@ -88,7 +88,7 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
 
         if !self.bv.check_for_errors {
             while location.statement_index < terminator_index {
-                self.visit_statement(location, &statements[location.statement_index]);
+                self.visit_statement(bb, location, &statements[location.statement_index]);
                 check_for_early_return!(self.bv);
                 location.statement_index += 1;
             }
@@ -103,15 +103,23 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
             ref kind,
         }) = *terminator
         {
-            self.visit_terminator(location, kind, *source_info);
+            self.visit_terminator(bb, location, kind, *source_info);
         }
     }
 
     /// Calls a specialized visitor for each kind of statement.
     #[logfn_inputs(DEBUG)]
-    fn visit_statement(&mut self, location: mir::Location, statement: &mir::Statement<'tcx>) {
+    fn visit_statement(&mut self, bb: mir::BasicBlock, location: mir::Location, statement: &mir::Statement<'tcx>) {
         debug!("env {:?}", self.bv.current_environment);
         self.bv.current_location = location;
+        self.bv
+            .visited_func_block_statements
+            .entry(bb)
+            .or_insert(Vec::new())
+            .push(BlockStatement::Statement(statement.clone()));
+
+        info!("Statement {:?}", statement);
+
         let mir::Statement { kind, source_info } = statement;
         self.bv.current_span = source_info.span;
         match kind {
@@ -280,6 +288,7 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
     #[logfn_inputs(DEBUG)]
     fn visit_terminator(
         &mut self,
+        bb: mir::BasicBlock,
         location: mir::Location,
         kind: &mir::TerminatorKind<'tcx>,
         source_info: mir::SourceInfo,
@@ -287,11 +296,19 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
         debug!("env {:?}", self.bv.current_environment);
         self.bv.current_location = location;
         self.bv.current_span = source_info.span;
+
+        info!("Kind {:?}", kind);
+        self.bv
+            .visited_func_block_statements
+            .entry(bb)
+            .or_insert(Vec::new())
+            .push(BlockStatement::TerminatorKind(kind.clone()));
+
         match kind {
             mir::TerminatorKind::Goto { target } => self.visit_goto(*target),
             mir::TerminatorKind::SwitchInt { discr, targets } => {
                 self.visit_switch_int(discr, discr.ty(self.bv.mir, self.bv.tcx), targets)
-            }
+            },
             mir::TerminatorKind::UnwindResume => self.visit_unwind_resume(),
             mir::TerminatorKind::UnwindTerminate(reason) => self.visit_unwind_terminate(reason),
             mir::TerminatorKind::Return => self.visit_return(),
@@ -310,12 +327,13 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
                 unwind,
                 call_source: _,
                 fn_span,
-            } => self.visit_call(func, args, *destination, *target, *unwind, fn_span),
+            } => self.visit_call(bb, func, args, *destination, *target, *unwind, fn_span),
             mir::TerminatorKind::TailCall {
                 func,
                 args,
                 fn_span,
             } => self.visit_call(
+                bb,
                 func,
                 args,
                 mir::Place::return_place(),
@@ -592,6 +610,7 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
     #[logfn_inputs(TRACE)]
     fn visit_call(
         &mut self,
+        bb: mir::BasicBlock,
         func: &mir::Operand<'tcx>,
         args: &[Spanned<mir::Operand<'tcx>>],
         destination: mir::Place<'tcx>,
@@ -605,20 +624,23 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
         // a field reachable from a mutable parameter.
         // We assume that no program that does not make MIRAI run out of memory will have more than
         // a million local variables.
+        info!("Hi call");
+
         self.bv.fresh_variable_offset += 1_000_000;
 
-        trace!("source location {:?}", fn_span);
-        trace!("call stack {:?}", self.bv.active_calls_map);
-        trace!("visit_call {:?} {:?}", func, args);
-        trace!(
+        info!("source location {:?}", fn_span);
+        info!("call stack {:?}", self.bv.active_calls_map);
+        info!("visit_call {:?} {:?}", func, args);
+        info!(
             "self.generic_argument_map {:?}",
             self.type_visitor().generic_argument_map
         );
-        trace!(
+        info!(
             "actual_argument_types {:?}",
             self.type_visitor().actual_argument_types
         );
         trace!("env {:?}", self.bv.current_environment);
+
         let func_to_call = self.visit_operand(func);
         let func_ref = self.get_func_ref(&func_to_call);
         let func_ref_to_call = if let Some(fr) = func_ref {
@@ -739,12 +761,11 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
         call_visitor.callee_fun_val = func_to_call;
         call_visitor.function_constant_args = func_const_args;
         call_visitor.initial_type_cache = adt_map;
-        info!("calling func {:?}", call_visitor.callee_func_ref);
+        info!("callee_func_ref {:?}", call_visitor.callee_func_ref);
         if call_visitor.handled_as_special_function_call() {
             return;
         }
         let function_summary = call_visitor.get_function_summary().unwrap_or_default();
-
         if !function_summary.is_computed {
             if (known_name != KnownNames::StdCloneClone || !self_ty_is_fn_ptr)
                 && call_visitor
@@ -776,6 +797,13 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
         } else {
             call_visitor.transfer_and_refine_into_current_environment(&function_summary);
         }
+
+        info!("Callee function name {:?}", call_visitor.get_callee_name());
+        let callee_name = call_visitor.get_callee_name();
+        // True if the function call was to transfer tokens
+        if callee_name.contains("try_borrow_mut_lamports") {
+            self.bv.visited_func_lamport_transfer.entry(bb).or_insert(callee_name);
+        }  
     }
 
     #[logfn_inputs(TRACE)]
@@ -1621,10 +1649,6 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
         }
 
         fn get_assert_msg_description<'tcx>(msg: &mir::AssertMessage<'tcx>) -> &'tcx str {
-            use mir::AssertKind::*;
-            use mir::BinOp;
-            use rustc_hir::CoroutineDesugaring;
-            use rustc_hir::CoroutineKind;
             match msg {
                 BoundsCheck { .. } => "index out of bounds",
                 MisalignedPointerDereference { .. } => "misaligned pointer dereference",
@@ -4284,6 +4308,46 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
             mir::ProjectionElem::OpaqueCast(_) => {
                 // Dummy selector that will be ignored by caller.
                 PathSelector::Deref
+            }
+        }
+    }
+
+    fn check_for_reentrancy(&mut self) {
+        if self.bv.visited_func_lamport_transfer.len() > 0 {
+            let last_func_lamport_transfer = self.bv.visited_func_lamport_transfer.iter().last();
+            // Traverse the successor blocks starting from the last block calling try_borrow_mut_lamports
+            if let Some ((last_bb, _)) = last_func_lamport_transfer {
+                for (bb, block_statements) in &self.bv.visited_func_block_statements {
+                    // Find the storage storing the local balance for the deposited token
+                    if bb < last_bb {
+                        for block_statement in block_statements {
+                            match block_statement {
+                                BlockStatement::Statement(statement) => {},
+                                BlockStatement::TerminatorKind(kind) => {}
+                            }
+                        }
+                    }
+
+                    // Check if the previous storage was updated
+                    if bb > last_bb {
+                        for block_statement in block_statements {
+                            match block_statement {
+                                BlockStatement::Statement(statement) => {},
+                                BlockStatement::TerminatorKind(_kind) => {
+                                    if let mir::TerminatorKind::Assert {
+                                        cond,
+                                        expected,
+                                        msg,
+                                        target,
+                                        unwind,
+                                    } = kind {
+                                        self.visit_assert(cond, *expected, msg, *target, *unwind);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
