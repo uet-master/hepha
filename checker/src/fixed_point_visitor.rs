@@ -13,6 +13,7 @@ use rpds::{HashTrieMap, HashTrieSet};
 use mirai_annotations::*;
 use rustc_data_structures::graph::dominators::Dominators;
 use rustc_middle::mir;
+use rustc_span::{Span, SyntaxContext};
 
 use crate::abstract_value::{AbstractValue, AbstractValueTrait};
 use crate::block_visitor::BlockVisitor;
@@ -89,7 +90,27 @@ impl<'fixed, 'analysis, 'compilation, 'tcx>
 
         // Check if the analyzed body contains reentrancy
         info!("Check the reentrancy here !!!");
-        self.bv.check_for_reentrancy();
+        let is_reentrancy = self.bv.reentrancy_checker.check();
+        info!("is_reentrancy {:?}", is_reentrancy);
+        if is_reentrancy {
+            self.bv.reentrancy_checker.ending_reentrancy_span = self.bv.current_span.hi();
+            let warning_message = "Possible reentrancy for the smart contract";
+            let span = Span::new(
+                self.bv.reentrancy_checker.starting_reentrancy_span,
+                self.bv.reentrancy_checker.ending_reentrancy_span,
+                SyntaxContext::root(),
+                None,
+            );
+            let warning = self
+                .bv
+                .cv
+                .session
+                .dcx()
+                .struct_span_warn(span, warning_message);
+        
+            info!("Warning {:?}", warning);
+            self.bv.emit_diagnostic(warning);
+        }
     }
 
     /// Visits a single basic block, starting with an in_state that is the join of all of

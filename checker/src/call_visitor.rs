@@ -3304,4 +3304,8 @@ impl<'call, 'block, 'analysis, 'compilation, 'tcx>
             }
         }
     }
+
+    pub fn get_callee_name(&self) -> Rc<str> {
+        utils::summary_key_str(self.block_visitor.bv.tcx, self.callee_def_id)
+    }
 }

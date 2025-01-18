@@ -98,3 +98,4 @@ pub mod type_visitor;
 pub mod utils;
 #[cfg(feature = "z3")]
 pub mod z3_solver;
+pub mod contract_errors;

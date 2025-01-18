@@ -44,7 +44,7 @@ use crate::tag_domain::Tag;
 use crate::type_visitor::TypeVisitor;
 use crate::utils;
 use crate::{abstract_value, known_names};
-use crate::body_visitor::BlockStatement;
+use crate::contract_errors::BlockStatement;
 
 /// Holds the state for the basic block visitor
 pub struct BlockVisitor<'block, 'analysis, 'compilation, 'tcx> {
@@ -116,6 +116,7 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
         debug!("env {:?}", self.bv.current_environment);
         self.bv.current_location = location;
         self.bv
+            .reentrancy_checker
             .block_statements
             .entry(bb)
             .or_insert(Vec::new())
@@ -154,7 +155,7 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
     #[logfn_inputs(TRACE)]
     fn visit_assign(&mut self, place: &mir::Place<'tcx>, rvalue: &mir::Rvalue<'tcx>) {
         info!("Place {:?}, rvalue {:?}", place, rvalue);
-        self.bv.current_assign_destination = Some(*place);
+        self.bv.reentrancy_checker.current_assign_destination = Some(*place);
         let mut path = self.visit_lh_place(place);
         match &path.value {
             PathEnum::PhantomData => {
@@ -306,6 +307,7 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
 
         info!("Kind {:?}", kind);
         self.bv
+            .reentrancy_checker
             .block_statements
             .entry(bb)
             .or_insert(Vec::new())
@@ -806,24 +808,25 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
             call_visitor.transfer_and_refine_into_current_environment(&function_summary);
         }
 
-        let callee_name = call_visitor.get_callee_name();
+        // Reentrancy is here
+        let callee_name =  utils::summary_key_str(tcx, callee_def_id);
         info!("Callee function name {:?}, bb {:?}, lamports {:?}", callee_name, bb, callee_name.contains("try_borrow_mut_lamports"));
         // True if the function is to transfer tokens
         if callee_name.contains("try_borrow_mut_lamports") {
-            self.bv.function_lamport_transfer.entry(bb).or_insert(callee_name.clone());
+            self.bv.reentrancy_checker.function_lamport_transfer.entry(bb).or_insert(callee_name.clone());
         }
         // True if the function holds the balance of an user in the solana contract
         if callee_name.contains("std.collections.hash.map") {
-            self.bv.check_for_balance_variable = true;
-            self.bv.temporary_variable_for_balance = Some(destination);
+            self.bv.reentrancy_checker.check_for_balance_variable = true;
+            self.bv.reentrancy_checker.temporary_variable_for_balance = Some(destination);
+            self.bv.reentrancy_checker.starting_reentrancy_span = self.bv.current_span.lo();
         }
-
-        if self.bv.check_for_balance_variable {
+        if self.bv.reentrancy_checker.check_for_balance_variable {
             for arg in args {
                 let operand = arg.node.clone();
                 if let mir::Operand::Copy(place) | mir::Operand::Move(place) = operand {
-                    if self.bv.temporary_variable_for_balance == Some(place) {
-                        self.bv.temporary_variable_for_balance = Some(destination);
+                    if self.bv.reentrancy_checker.temporary_variable_for_balance == Some(place) {
+                        self.bv.reentrancy_checker.temporary_variable_for_balance = Some(destination);
                     }
                 }
             }
@@ -1836,17 +1839,17 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
     fn visit_use(&mut self, path: Rc<Path>, operand: &mir::Operand<'tcx>) {
         match operand {
             mir::Operand::Copy(place) => {
-                if self.bv.check_for_balance_variable && self.bv.temporary_variable_for_balance == Some(*place) {
-                    self.bv.temporary_variable_for_balance = self.bv.current_assign_destination;
+                if self.bv.reentrancy_checker.check_for_balance_variable && self.bv.reentrancy_checker.temporary_variable_for_balance == Some(*place) {
+                    self.bv.reentrancy_checker.temporary_variable_for_balance = self.bv.reentrancy_checker.current_assign_destination;
                 }
                 self.visit_used_copy(path, place);
             }
             mir::Operand::Move(place) => {
-                if self.bv.check_for_balance_variable {
-                    if let Some(temporary_place) = self.bv.temporary_variable_for_balance {
+                if self.bv.reentrancy_checker.check_for_balance_variable {
+                    if let Some(temporary_place) = self.bv.reentrancy_checker.temporary_variable_for_balance {
                         if *place == temporary_place || place.local == temporary_place.local {
-                            self.bv.temporary_variable_for_balance = self.bv.current_assign_destination;
-                            self.bv.check_for_balance_variable = false;
+                            self.bv.reentrancy_checker.temporary_variable_for_balance = self.bv.reentrancy_checker.current_assign_destination;
+                            self.bv.reentrancy_checker.check_for_balance_variable = false;
                         }
                     }
                 }

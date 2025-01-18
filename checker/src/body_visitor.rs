@@ -22,6 +22,7 @@ use crate::abstract_value::{self, AbstractValue, AbstractValueTrait, BOTTOM};
 use crate::block_visitor::BlockVisitor;
 use crate::call_visitor::CallVisitor;
 use crate::constant_domain::ConstantDomain;
+use crate::contract_errors::ReentrancyChecker;
 use crate::crate_visitor::CrateVisitor;
 use crate::environment::Environment;
 use crate::expression::{Expression, ExpressionType, LayoutSource};
@@ -83,16 +84,8 @@ pub struct BodyVisitor<'analysis, 'compilation, 'tcx> {
     pub block_to_call: HashMap<mir::Location, DefId>,
     pub treat_as_foreign: bool,
     type_visitor: TypeVisitor<'tcx>,
-    // The block statements are belong to a function
-    pub block_statements: HashMap<mir::BasicBlock, Vec<BlockStatement<'tcx>>>,
-    // [Reentrancy] The function call transfers tokens in solana contract
-    pub function_lamport_transfer: HashMap<mir::BasicBlock, Rc<str>>,
-    // [Reentrancy] The temporary variable holds the balance of an user in the solana contract
-    pub temporary_variable_for_balance: Option<mir::Place<'tcx>>,
-    // [Reentrancy] Check for detecting the variable holding the balance of an user in the solana contract
-    pub check_for_balance_variable: bool,
-    //  [Reentrancy] Current assign destination in the statement
-    pub current_assign_destination: Option<mir::Place<'tcx>>
+    // Vulnerability detection for smart contracts
+    pub reentrancy_checker: ReentrancyChecker<'tcx>
 }
 
 impl Debug for BodyVisitor<'_, '_, '_> {
@@ -162,11 +155,7 @@ impl<'analysis, 'compilation, 'tcx> BodyVisitor<'analysis, 'compilation, 'tcx> {
             block_to_call: HashMap::default(),
             treat_as_foreign: false,
             type_visitor: TypeVisitor::new(def_id, mir, tcx, type_cache),
-            block_statements: HashMap::default(),
-            function_lamport_transfer: HashMap::default(),
-            temporary_variable_for_balance: None,
-            check_for_balance_variable: false,
-            current_assign_destination: None
+            reentrancy_checker: ReentrancyChecker::new()
         }
     }
 
@@ -3001,41 +2990,6 @@ impl<'analysis, 'compilation, 'tcx> BodyVisitor<'analysis, 'compilation, 'tcx> {
                 } else {
                     // If path_prefix is no longer a qualified path, we exit the loop.
                     break;
-                }
-            }
-        }
-    }
-
-    pub fn check_for_reentrancy(&mut self) {
-        info!("Check for reentrancy");
-        if self.function_lamport_transfer.len() > 0 {
-            let last_function_lamport_transfer = self.function_lamport_transfer.iter().last();
-            info!("Last function lamport {:?}", last_function_lamport_transfer);
-            info!("Variable for balance {:?}", self.temporary_variable_for_balance);
-            if let Some ((last_bb, _)) = last_function_lamport_transfer {
-                for (bb, block_statements) in &self.block_statements {
-                    info!("bb {:?}, last_bb {:?}, greater {:}", bb, last_bb, bb > last_bb);
-                    if bb > last_bb {
-                        for block_statement in block_statements {
-                            if let BlockStatement::TerminatorKind(kind) = block_statement {
-                                if let mir::TerminatorKind::Assert {
-                                    cond: _,
-                                    expected: _,
-                                    msg,
-                                    target: _,
-                                    unwind: _,
-                                } = kind {
-                                    if let mir::AssertKind::Overflow(mir::BinOp::Sub, ref left_operand, _) = **msg {
-                                        if let mir::Operand::Copy(place) = left_operand {
-                                            if self.temporary_variable_for_balance == Some(*place) {
-                                                info!("========Reentrancy========");
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
             }
         }
