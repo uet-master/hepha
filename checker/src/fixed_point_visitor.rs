@@ -94,7 +94,7 @@ impl<'fixed, 'analysis, 'compilation, 'tcx>
         info!("is_reentrancy {:?}", is_reentrancy);
         if is_reentrancy {
             self.bv.reentrancy_checker.ending_reentrancy_span = self.bv.current_span.hi();
-            let warning_message = "Possible reentrancy for the smart contract";
+            let warning_message = "possible reentrancy for the smart contract";
             let span = Span::new(
                 self.bv.reentrancy_checker.starting_reentrancy_span,
                 self.bv.reentrancy_checker.ending_reentrancy_span,

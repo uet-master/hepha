@@ -21,6 +21,7 @@ pub struct ReentrancyChecker<'tcx> {
     pub check_for_balance_variable: bool,
     //  Current assign destination in the statement
     pub current_assign_destination: Option<mir::Place<'tcx>>,
+    // The spans contain reentrancy codes
     pub starting_reentrancy_span: BytePos,
     pub ending_reentrancy_span: BytePos
 }
@@ -54,9 +55,20 @@ impl<'tcx> ReentrancyChecker<'tcx> {
                 }
                 info!("bb {:?}, last_bb {:?}, greater {:?}", bb, last_bb, bb > last_bb);
                 for block_statement in block_statements {
+                    if let BlockStatement::Statement(statement) = block_statement {
+                        let mir::Statement { kind, .. } = statement;
+                        let status = self.visit_reentrancy_statement(kind);
+                        is_reentrancy = status || is_reentrancy;
+                        if is_reentrancy {
+                            break;
+                        }
+                    }
                     if let BlockStatement::TerminatorKind(kind) = block_statement {
                         let status = self.visit_reentrancy_terminator(kind);
                         is_reentrancy = status || is_reentrancy;
+                        if is_reentrancy {
+                            break;
+                        }
                     }
                 }
             }
@@ -70,10 +82,22 @@ impl<'tcx> ReentrancyChecker<'tcx> {
                 if let mir::Operand::Copy(place) = left_operand {
                     if let Some(temporary_place) = self.temporary_variable_for_balance {
                         if temporary_place.local == place.local {
-                            info!("========Reentrancy========");
+                            info!("========Reentrancy in Terminator========");
                             return true;
                         }
                     }
+                }
+            }
+        }
+        return false;
+    }
+
+    fn visit_reentrancy_statement(&self, kind: &mir::StatementKind<'_>) -> bool {
+        if let mir::StatementKind::Assign(box (place, _)) = kind {
+            if let Some(temporary_place) = self.temporary_variable_for_balance {
+                if temporary_place.local == place.local {
+                    info!("========Reentrancy in Statement========");
+                    return true;
                 }
             }
         }
