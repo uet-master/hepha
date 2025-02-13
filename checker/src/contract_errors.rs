@@ -21,8 +21,9 @@ pub struct ReentrancyChecker<'tcx> {
     pub check_for_balance_variable: bool,
     //  Current assign destination in the statement
     pub current_assign_destination: Option<mir::Place<'tcx>>,
-    // The spans contain reentrancy codes
+    // The starting spans contain reentrancy codes
     pub starting_reentrancy_span: BytePos,
+    // The ending spans contain reentrancy codes
     pub ending_reentrancy_span: BytePos
 }
 
@@ -39,13 +40,15 @@ impl<'tcx> ReentrancyChecker<'tcx> {
         }
     }
 
+    /// Check if the reentrancy happens. The reentrancy possibly happens when a ``LOAD`` instruction executes 
+    /// before the ``TRANSFER`` instruction, while a ``STORE`` instruction takes place after this TRANSFER 
+    /// instruction, sharing the same location with the previous ``LOAD`` instruction.
     pub fn check(&self) -> bool {
         info!("Check for reentrancy");
         let mut is_reentrancy = false;
         if self.function_lamport_transfer.is_empty() {
             return is_reentrancy;
         }
-    
         if let Some((last_bb, _)) = self.function_lamport_transfer.iter().last() {
             info!("Last function lamport {:?}", last_bb);
             info!("Variable for balance {:?}", self.temporary_variable_for_balance);
@@ -55,6 +58,7 @@ impl<'tcx> ReentrancyChecker<'tcx> {
                 }
                 info!("bb {:?}, last_bb {:?}, greater {:?}", bb, last_bb, bb > last_bb);
                 for block_statement in block_statements {
+                    // If the balance is assigned to a constant
                     if let BlockStatement::Statement(statement) = block_statement {
                         let mir::Statement { kind, .. } = statement;
                         let status = self.visit_reentrancy_statement(kind);
@@ -63,6 +67,7 @@ impl<'tcx> ReentrancyChecker<'tcx> {
                             break;
                         }
                     }
+                    // If the balance is related to arithmetic operations. E.g., balance -= amount
                     if let BlockStatement::TerminatorKind(kind) = block_statement {
                         let status = self.visit_reentrancy_terminator(kind);
                         is_reentrancy = status || is_reentrancy;
@@ -82,7 +87,6 @@ impl<'tcx> ReentrancyChecker<'tcx> {
                 if let mir::Operand::Copy(place) = left_operand {
                     if let Some(temporary_place) = self.temporary_variable_for_balance {
                         if temporary_place.local == place.local {
-                            info!("========Reentrancy in Terminator========");
                             return true;
                         }
                     }
@@ -96,7 +100,6 @@ impl<'tcx> ReentrancyChecker<'tcx> {
         if let mir::StatementKind::Assign(box (place, _)) = kind {
             if let Some(temporary_place) = self.temporary_variable_for_balance {
                 if temporary_place.local == place.local {
-                    info!("========Reentrancy in Statement========");
                     return true;
                 }
             }

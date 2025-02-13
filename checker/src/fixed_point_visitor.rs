@@ -91,7 +91,6 @@ impl<'fixed, 'analysis, 'compilation, 'tcx>
         // Check if the analyzed body contains reentrancy
         info!("Check the reentrancy here !!!");
         let is_reentrancy = self.bv.reentrancy_checker.check();
-        info!("is_reentrancy {:?}", is_reentrancy);
         if is_reentrancy {
             self.bv.reentrancy_checker.ending_reentrancy_span = self.bv.current_span.hi();
             let warning_message = "possible reentrancy for the smart contract";
@@ -107,8 +106,6 @@ impl<'fixed, 'analysis, 'compilation, 'tcx>
                 .session
                 .dcx()
                 .struct_span_warn(span, warning_message);
-        
-            info!("Warning {:?}", warning);
             self.bv.emit_diagnostic(warning);
         }
     }
