@@ -1,8 +1,8 @@
 use solana_program::{
+    msg,
     account_info::{next_account_info, AccountInfo},
     entrypoint,
     entrypoint::ProgramResult,
-    msg,
     program_error::ProgramError,
     pubkey::Pubkey,
 };
@@ -29,7 +29,6 @@ pub fn process_instruction(
     }
 
     let instruction = instruction_data[0];
-
     match instruction {
         0 => {
             let amount = u64::from_le_bytes(instruction_data[1..9].try_into().unwrap());

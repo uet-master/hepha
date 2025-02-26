@@ -87,7 +87,7 @@ impl<'fixed, 'analysis, 'compilation, 'tcx>
                 }
             }
         }
-
+        
         // Check if the analyzed body contains reentrancy
         info!("Check the reentrancy here !!!");
         let is_reentrancy = self.bv.reentrancy_checker.check();

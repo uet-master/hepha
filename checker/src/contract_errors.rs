@@ -40,9 +40,10 @@ impl<'tcx> ReentrancyChecker<'tcx> {
         }
     }
 
-    /// Check if the reentrancy happens. The reentrancy possibly happens when a ``LOAD`` instruction executes 
-    /// before the ``TRANSFER`` instruction, while a ``STORE`` instruction takes place after this TRANSFER 
-    /// instruction, sharing the same location with the previous ``LOAD`` instruction.
+    /// Check if the reentrancy happens. The reentrancy will possibly happens if the following executions
+    /// happen. First, a ``LOAD`` instruction occurs. Second, the ``TRANSFER`` instruction occurs.
+    /// Lastly, a ``STORE`` instruction executes, interacting with the same location accessed by
+    /// the former ``LOAD`` instruction.
     pub fn check(&self) -> bool {
         info!("Check for reentrancy");
         let mut is_reentrancy = false;
