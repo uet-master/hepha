@@ -7,7 +7,9 @@ members = [
     "standard_contracts",
     "contracts/arithmetic",
     "contracts/reentrancy/basis", 
-    "contracts/reentrancy/cross_function"]
+    "contracts/reentrancy/cross_function", 
+    "contracts/bad_randomness/random_winner", 
+    "contracts/bad_randomness/random_number"]
 
 [profile.release]
 debug = true
