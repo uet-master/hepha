@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::rc::Rc;
 use rustc_middle::mir;
-use rustc_span::BytePos;
+use rustc_span::{BytePos, Span};
 
 #[derive(Debug, Clone)]
 pub enum BlockStatement<'tcx> {
@@ -109,4 +109,31 @@ impl<'tcx> ReentrancyChecker<'tcx> {
     }
     
 }
+
+// Hold states for the bad radomness which checks if these contract codes contains bad radnomness
+pub struct BadrandomnessChecker {
+    // Check if the clock lib is used
+    pub check_for_clock_lib: bool,
+     // The span contains codes related to bad randomness
+     pub bad_randomness_span: Span,
+}
+
+impl BadrandomnessChecker {
+    pub fn new() -> BadrandomnessChecker {
+        return BadrandomnessChecker { 
+            check_for_clock_lib: false, 
+            bad_randomness_span: rustc_span::DUMMY_SP
+        }
+    }
+
+    /// Check if the bad randomness happens. The bad randomness will possibly happens if 
+    /// ``solana_program::sysvar::clock::Clock`` is used
+    pub fn check(&self) -> bool {
+        return self.check_for_clock_lib;
+    }
+}
+
+
+
+
 

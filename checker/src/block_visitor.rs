@@ -665,6 +665,12 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
             }
             return;
         };
+        // Bad randomness is here 
+        let argument_type_key = func_ref_to_call.argument_type_key.clone();
+        if argument_type_key.contains("__solana_clock_Clock") {
+            self.bv.bad_randomness_checker.check_for_clock_lib = true;
+            self.bv.bad_randomness_checker.bad_randomness_span = self.bv.current_span;
+        }
         let callee_def_id = func_ref_to_call
             .def_id
             .expect("callee obtained via operand should have def id");

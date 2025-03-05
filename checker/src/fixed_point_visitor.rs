@@ -108,6 +108,20 @@ impl<'fixed, 'analysis, 'compilation, 'tcx>
                 .struct_span_warn(span, warning_message);
             self.bv.emit_diagnostic(warning);
         }
+
+        // Check if the analyzed body contains bad randomness
+        info!("Check the bad randomness here !!!");
+        let is_bad_randomness = self.bv.bad_randomness_checker.check();
+        if is_bad_randomness {
+            let warning_message = "possible bad randomness for the smart contract";
+            let warning = self
+                .bv
+                .cv
+                .session
+                .dcx()
+                .struct_span_warn(self.bv.bad_randomness_checker.bad_randomness_span, warning_message);
+            self.bv.emit_diagnostic(warning);
+        }
     }
 
     /// Visits a single basic block, starting with an in_state that is the join of all of
