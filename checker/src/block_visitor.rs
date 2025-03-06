@@ -671,9 +671,31 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
             self.bv.bad_randomness_checker.check_for_clock_lib = true;
             self.bv.bad_randomness_checker.bad_randomness_span = self.bv.current_span;
         }
+
         let callee_def_id = func_ref_to_call
             .def_id
             .expect("callee obtained via operand should have def id");
+        // Reentrancy is here
+        let callee_name =  utils::summary_key_str(self.bv.tcx, callee_def_id);
+        if callee_name.contains("try_borrow_mut_lamports") {
+            self.bv.reentrancy_checker.function_lamport_transfer.entry(bb).or_insert(callee_name.clone());
+        }
+        if callee_name.contains("std.collections.hash.map") {
+            self.bv.reentrancy_checker.check_for_balance_variable = true;
+            self.bv.reentrancy_checker.temporary_variable_for_balance = Some(destination);
+            self.bv.reentrancy_checker.starting_reentrancy_span = self.bv.current_span.lo();
+        }
+        if self.bv.reentrancy_checker.check_for_balance_variable {
+            for arg in args {
+                let operand = arg.node.clone();
+                if let mir::Operand::Copy(place) | mir::Operand::Move(place) = operand {
+                    if self.bv.reentrancy_checker.temporary_variable_for_balance == Some(place) {
+                        self.bv.reentrancy_checker.temporary_variable_for_balance = Some(destination);
+                    }
+                }
+            }
+        }
+        
         let generic_args = self
             .bv
             .cv
@@ -813,30 +835,6 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
         } else {
             call_visitor.transfer_and_refine_into_current_environment(&function_summary);
         }
-
-        // Reentrancy is here
-        let callee_name =  utils::summary_key_str(tcx, callee_def_id);
-        info!("Callee function name {:?}, bb {:?}, lamports {:?}", callee_name, bb, callee_name.contains("try_borrow_mut_lamports"));
-        // True if the function is to transfer tokens
-        if callee_name.contains("try_borrow_mut_lamports") {
-            self.bv.reentrancy_checker.function_lamport_transfer.entry(bb).or_insert(callee_name.clone());
-        }
-        // True if the function holds the balance of an user in the solana contract
-        if callee_name.contains("std.collections.hash.map") {
-            self.bv.reentrancy_checker.check_for_balance_variable = true;
-            self.bv.reentrancy_checker.temporary_variable_for_balance = Some(destination);
-            self.bv.reentrancy_checker.starting_reentrancy_span = self.bv.current_span.lo();
-        }
-        if self.bv.reentrancy_checker.check_for_balance_variable {
-            for arg in args {
-                let operand = arg.node.clone();
-                if let mir::Operand::Copy(place) | mir::Operand::Move(place) = operand {
-                    if self.bv.reentrancy_checker.temporary_variable_for_balance == Some(place) {
-                        self.bv.reentrancy_checker.temporary_variable_for_balance = Some(destination);
-                    }
-                }
-            }
-        }        
     }
 
     #[logfn_inputs(TRACE)]

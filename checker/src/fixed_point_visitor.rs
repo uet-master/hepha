@@ -88,8 +88,7 @@ impl<'fixed, 'analysis, 'compilation, 'tcx>
             }
         }
         
-        // Check if the analyzed body contains reentrancy
-        info!("Check the reentrancy here !!!");
+        // Emit a warning if the analyzed body contains reentrancy
         let is_reentrancy = self.bv.reentrancy_checker.check();
         if is_reentrancy {
             self.bv.reentrancy_checker.ending_reentrancy_span = self.bv.current_span.hi();
@@ -109,8 +108,7 @@ impl<'fixed, 'analysis, 'compilation, 'tcx>
             self.bv.emit_diagnostic(warning);
         }
 
-        // Check if the analyzed body contains bad randomness
-        info!("Check the bad randomness here !!!");
+        // Emit a warning if the analyzed body contains bad randomness
         let is_bad_randomness = self.bv.bad_randomness_checker.check();
         if is_bad_randomness {
             let warning_message = "possible bad randomness for the smart contract";
