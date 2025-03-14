@@ -665,11 +665,11 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
             }
             return;
         };
-        // Bad randomness is here 
+        // Time manipulation is here 
         let argument_type_key = func_ref_to_call.argument_type_key.clone();
         if argument_type_key.contains("__solana_clock_Clock") {
-            self.bv.bad_randomness_checker.check_for_clock_lib = true;
-            self.bv.bad_randomness_checker.bad_randomness_span = self.bv.current_span;
+            self.bv.time_manipulation_checker.check_for_clock_lib = true;
+            self.bv.time_manipulation_checker.time_manipulation_span = self.bv.current_span;
         }
 
         let callee_def_id = func_ref_to_call
@@ -681,6 +681,12 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
         if callee_name.contains("std.f64.implement_f64.round") {
             self.bv.numerical_precision_checker.check_for_round_func = true;
             self.bv.numerical_precision_checker.numerical_precision_error_span = self.bv.current_span;
+        }
+
+        // Bad randomness is here
+        if callee_name.contains("rand") {
+            self.bv.bad_randomness_checker.check_for_rand_lib = true;
+            self.bv.bad_randomness_checker.bad_randomness_span = self.bv.current_span;
         }
 
         // Reentrancy is here

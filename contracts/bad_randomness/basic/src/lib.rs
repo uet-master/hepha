@@ -4,9 +4,9 @@ use solana_program::{
     entrypoint,
     entrypoint::ProgramResult,
     program_error::ProgramError,
-    pubkey::Pubkey,
-    sysvar::{clock::Clock, Sysvar}
+    pubkey::Pubkey
 };
+use rand::Rng;
 
 entrypoint!(process_instruction);
 
@@ -23,10 +23,9 @@ pub fn process_instruction(
         return Err(ProgramError::MissingRequiredSignature);
     }
 
-    let clock = Clock::get()?;
-    let block_timestamp = clock.unix_timestamp as f64;
-    let random_number = (block_timestamp / (17 as f64)).round();
+    let mut rng = rand::rng();
+    let random_number = rng.random_range(1.0..3.0);
 
-    msg!("Current round random number: {}", random_number);
+    msg!("Current random number: {}", random_number);
     Ok(())
 }

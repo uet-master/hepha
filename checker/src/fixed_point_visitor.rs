@@ -108,6 +108,19 @@ impl<'fixed, 'analysis, 'compilation, 'tcx>
             self.bv.emit_diagnostic(warning);
         }
 
+        // Emit a warning if the analyzed body contains time manipulation
+        let is_time_manipulation = self.bv.time_manipulation_checker.check();
+        if is_time_manipulation {
+            let warning_message = "possible time manipulation for the smart contract";
+            let warning = self
+                .bv
+                .cv
+                .session
+                .dcx()
+                .struct_span_warn(self.bv.time_manipulation_checker.time_manipulation_span, warning_message);
+            self.bv.emit_diagnostic(warning);
+        }
+
         // Emit a warning if the analyzed body contains bad randomness
         let is_bad_randomness = self.bv.bad_randomness_checker.check();
         if is_bad_randomness {
