@@ -675,8 +675,15 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
         let callee_def_id = func_ref_to_call
             .def_id
             .expect("callee obtained via operand should have def id");
-        // Reentrancy is here
+        
         let callee_name =  utils::summary_key_str(self.bv.tcx, callee_def_id);
+        // Numerical precision error is here
+        if callee_name.contains("std.f64.implement_f64.round") {
+            self.bv.numerical_precision_checker.check_for_round_func = true;
+            self.bv.numerical_precision_checker.numerical_precision_error_span = self.bv.current_span;
+        }
+
+        // Reentrancy is here
         if callee_name.contains("try_borrow_mut_lamports") {
             self.bv.reentrancy_checker.function_lamport_transfer.entry(bb).or_insert(callee_name.clone());
         }

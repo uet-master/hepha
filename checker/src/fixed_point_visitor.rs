@@ -120,6 +120,19 @@ impl<'fixed, 'analysis, 'compilation, 'tcx>
                 .struct_span_warn(self.bv.bad_randomness_checker.bad_randomness_span, warning_message);
             self.bv.emit_diagnostic(warning);
         }
+
+        // Emit a warning if the analyzed body contains numerical precision error
+        let is_numerical_precision_error = self.bv.numerical_precision_checker.check();
+        if is_numerical_precision_error {
+            let warning_message = "possible numerical precision error for the smart contract";
+            let warning = self
+                .bv
+                .cv
+                .session
+                .dcx()
+                .struct_span_warn(self.bv.numerical_precision_checker.numerical_precision_error_span, warning_message);
+            self.bv.emit_diagnostic(warning);
+        }
     }
 
     /// Visits a single basic block, starting with an in_state that is the join of all of

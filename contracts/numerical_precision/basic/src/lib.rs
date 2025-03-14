@@ -24,9 +24,8 @@ pub fn process_instruction(
     }
 
     let clock = Clock::get()?;
-    let block_timestamp = clock.unix_timestamp;
-    let block_number = clock.slot as i64;
-    let random_number = block_timestamp * (block_number + 100);
+    let block_timestamp = clock.unix_timestamp as f64;
+    let random_number = (block_timestamp / (17 as f64)).round();
 
     msg!("Current random number: {}", random_number);
     Ok(())

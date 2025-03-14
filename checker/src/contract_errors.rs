@@ -9,7 +9,7 @@ pub enum BlockStatement<'tcx> {
     TerminatorKind(mir::TerminatorKind<'tcx>)
 }
 
-// Hold states for the reentrancy which checks if these contract codes contains reentrancy
+// Hold states for the reentrancy
 pub struct ReentrancyChecker<'tcx> {
     // The block statements are belong to a function
     pub block_statements: HashMap<mir::BasicBlock, Vec<BlockStatement<'tcx>>>,
@@ -110,7 +110,7 @@ impl<'tcx> ReentrancyChecker<'tcx> {
     
 }
 
-// Hold states for the bad radomness which checks if these contract codes contains bad radnomness
+// Hold states for the bad radomness
 pub struct BadrandomnessChecker {
     // Check if the clock lib is used
     pub check_for_clock_lib: bool,
@@ -130,6 +130,29 @@ impl BadrandomnessChecker {
     /// ``solana_program::sysvar::clock::Clock`` is used
     pub fn check(&self) -> bool {
         return self.check_for_clock_lib;
+    }
+}
+
+// Hold states for the numerical precision error
+pub struct NumericalPrecisionErrorChecker {
+    // Check if the round function used to round up a number
+    pub check_for_round_func: bool,
+    // The span contains codes related to numerical precision error
+    pub numerical_precision_error_span: Span,
+}
+
+impl NumericalPrecisionErrorChecker {
+    pub fn new() -> NumericalPrecisionErrorChecker {
+        return NumericalPrecisionErrorChecker {
+            check_for_round_func: false,
+            numerical_precision_error_span: rustc_span::DUMMY_SP
+        }
+    }
+
+    /// Check if the numerical precision error happens. The numerical precision error will 
+    /// possibly happens if  ``round`` function owned by ``float`` data type is used
+    pub fn check(&self) -> bool {
+        return self.check_for_round_func;
     }
 }
 

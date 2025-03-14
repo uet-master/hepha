@@ -22,7 +22,7 @@ use crate::abstract_value::{self, AbstractValue, AbstractValueTrait, BOTTOM};
 use crate::block_visitor::BlockVisitor;
 use crate::call_visitor::CallVisitor;
 use crate::constant_domain::ConstantDomain;
-use crate::contract_errors::{BadrandomnessChecker, ReentrancyChecker};
+use crate::contract_errors::{BadrandomnessChecker, NumericalPrecisionErrorChecker, ReentrancyChecker};
 use crate::crate_visitor::CrateVisitor;
 use crate::environment::Environment;
 use crate::expression::{Expression, ExpressionType, LayoutSource};
@@ -86,7 +86,8 @@ pub struct BodyVisitor<'analysis, 'compilation, 'tcx> {
     type_visitor: TypeVisitor<'tcx>,
     // Vulnerability detection for smart contracts
     pub reentrancy_checker: ReentrancyChecker<'tcx>,
-    pub bad_randomness_checker: BadrandomnessChecker
+    pub bad_randomness_checker: BadrandomnessChecker,
+    pub numerical_precision_checker: NumericalPrecisionErrorChecker
 }
 
 impl Debug for BodyVisitor<'_, '_, '_> {
@@ -157,7 +158,8 @@ impl<'analysis, 'compilation, 'tcx> BodyVisitor<'analysis, 'compilation, 'tcx> {
             treat_as_foreign: false,
             type_visitor: TypeVisitor::new(def_id, mir, tcx, type_cache),
             reentrancy_checker: ReentrancyChecker::new(),
-            bad_randomness_checker: BadrandomnessChecker::new()
+            bad_randomness_checker: BadrandomnessChecker::new(),
+            numerical_precision_checker: NumericalPrecisionErrorChecker::new()
         }
     }
 
