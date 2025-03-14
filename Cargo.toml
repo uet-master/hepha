@@ -5,11 +5,13 @@ members = [
     "annotations",
     "checker",
     "standard_contracts",
-    "contracts/arithmetic",
     "contracts/reentrancy/basis", 
     "contracts/reentrancy/cross_function", 
     "contracts/bad_randomness/random_winner", 
-    "contracts/bad_randomness/random_number", "contracts/numerical_precision/basic"]
+    "contracts/bad_randomness/random_number", 
+    "contracts/numerical_precision/basic", 
+    "contracts/numerical_precision/lending", 
+    "contracts/overflow/lamport_deposit"]
 
 [profile.release]
 debug = true
