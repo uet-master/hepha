@@ -2,17 +2,19 @@
 resolver = "2"
 
 members = [
-    "annotations",
-    "checker",
-    "standard_contracts",
-    "contracts/reentrancy/basis", 
-    "contracts/reentrancy/cross_function", 
-    "contracts/time_manipulation/random_winner", 
-    "contracts/time_manipulation/random_number", 
-    "contracts/numerical_precision/basic", 
-    "contracts/numerical_precision/lending", 
-    "contracts/arithmetic/lamport_deposit", 
-    "contracts/bad_randomness/basic"]
+  "annotations",
+  "checker",
+  "standard_contracts",
+  "contracts/reentrancy/basis", 
+  "contracts/reentrancy/cross_function", 
+  "contracts/time_manipulation/random_winner", 
+  "contracts/time_manipulation/random_number", 
+  "contracts/numerical_precision/basic", 
+  "contracts/numerical_precision/lending", 
+  "contracts/bad_randomness/basic",
+  "contracts/arithmetic/contract_one",
+  "contracts/arithmetic/contract_two"
+, "contracts/arithmetic/contract_three", "contracts/arithmetic/contract_four", "contracts/arithmetic/contract_five", "contracts/arithmetic/contract_six", "contracts/arithmetic/contract_seven", "contracts/arithmetic/contract_eight", "contracts/arithmetic/contract_nine", "contracts/arithmetic/contract_ten"]
 
 [profile.release]
 debug = true

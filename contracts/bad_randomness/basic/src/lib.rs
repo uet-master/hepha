@@ -6,7 +6,6 @@ use solana_program::{
     program_error::ProgramError,
     pubkey::Pubkey
 };
-use rand::Rng;
 
 entrypoint!(process_instruction);
 
@@ -23,8 +22,7 @@ pub fn process_instruction(
         return Err(ProgramError::MissingRequiredSignature);
     }
 
-    let mut rng = rand::rng();
-    let random_number = rng.random_range(1.0..3.0);
+    let random_number = fastrand::u64(1..10);
 
     msg!("Current random number: {}", random_number);
     Ok(())

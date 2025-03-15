@@ -684,7 +684,7 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
         }
 
         // Bad randomness is here
-        if callee_name.contains("rand") {
+        if callee_name.contains("fastrand") {
             self.bv.bad_randomness_checker.check_for_rand_lib = true;
             self.bv.bad_randomness_checker.bad_randomness_span = self.bv.current_span;
         }

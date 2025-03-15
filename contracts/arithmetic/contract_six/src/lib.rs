@@ -17,9 +17,8 @@ pub fn process_instruction(
 ) -> ProgramResult {
     let accounts_iter = &mut accounts.iter();
     let user_account = next_account_info(accounts_iter)?;
-    let contract_account = next_account_info(accounts_iter)?;
 
-    let mut balances: HashMap<Pubkey, u64> = HashMap::new();
+    let mut values: HashMap<Pubkey, u64> = HashMap::new();
 
     if !user_account.is_signer {
         msg!("User account must sign the transaction");
@@ -27,11 +26,11 @@ pub fn process_instruction(
     }
 
     let instruction = instruction_data[0];
-    let amount = u64::from_le_bytes(instruction_data[1..9].try_into().unwrap());
+    let data = user_account.try_borrow_mut_data()?;
+    let amount = u64::from_le_bytes(data[..8].try_into().unwrap());
     match instruction {
         0 => {
-            msg!("User deposits {} lamports", amount);
-            deposit(&mut balances, *user_account.key, amount, user_account, contract_account)?;
+            add(&mut values, *user_account.key, amount)?;
         }
         _ => {
             msg!("Invalid action");
@@ -42,18 +41,15 @@ pub fn process_instruction(
     Ok(())
 }
 
-pub fn deposit(
-    balances: &mut HashMap<Pubkey, u64>, 
+pub fn add(
+    values: &mut HashMap<Pubkey, u64>, 
     user: Pubkey, 
     amount: u64,
-    user_account: &AccountInfo,
-    contract_account: &AccountInfo
 ) -> Result<(), ProgramError>  {
-    let entry = balances.entry(user).or_insert(0);
+    let entry = values.entry(user).or_insert(0);
     *entry += amount;
     
-    **user_account.try_borrow_mut_lamports()? -= amount;
-    **contract_account.try_borrow_mut_lamports()? += amount;
     Ok(())
 }
+
 
