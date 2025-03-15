@@ -684,7 +684,10 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
         }
 
         // Bad randomness is here
-        if callee_name.contains("fastrand") {
+        if callee_name.contains("fastrand") 
+        || callee_name.contains("oorandom.implement_oorandom") 
+        || callee_name.contains("nanorand.rand")
+        {
             self.bv.bad_randomness_checker.check_for_rand_lib = true;
             self.bv.bad_randomness_checker.bad_randomness_span = self.bv.current_span;
         }

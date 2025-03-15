@@ -1,0 +1,8 @@
+[package]
+name = "bad-randomness-contract-ten"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+solana-program = "2.1.7"
+nanorand = "0.7"
