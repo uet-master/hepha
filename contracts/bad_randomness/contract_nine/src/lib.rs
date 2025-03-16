@@ -19,7 +19,7 @@ pub fn process_instruction(
     let accounts_iter = &mut accounts.iter();
     let user_account = next_account_info(accounts_iter)?;
 
-    let mut counters: HashMap<Pubkey, u64> = HashMap::new();
+    let mut values: HashMap<Pubkey, u64> = HashMap::new();
 
     if !user_account.is_signer {
         msg!("User account must sign the transaction");
@@ -29,7 +29,7 @@ pub fn process_instruction(
     let instruction = instruction_data[0];
     match instruction {
         0 => {
-            add(&mut counters, *user_account.key)?;
+            add(&mut values, *user_account.key)?;
         }
         _ => {
             msg!("Invalid action");
@@ -40,8 +40,8 @@ pub fn process_instruction(
     Ok(())
 }
 
-pub fn add(counters: &mut HashMap<Pubkey, u64>, user: Pubkey) -> Result<(), ProgramError>  {
-    let entry = counters.entry(user).or_insert(0);
+pub fn add(values: &mut HashMap<Pubkey, u64>, user: Pubkey) -> Result<(), ProgramError>  {
+    let entry = values.entry(user).or_insert(0);
     let mut rng = WyRand::new();
     let random_number = rng.generate_range(1..=100);
     *entry += random_number;

@@ -18,7 +18,7 @@ pub fn process_instruction(
     let accounts_iter = &mut accounts.iter();
     let user_account = next_account_info(accounts_iter)?;
 
-    let mut counters: HashMap<Pubkey, i8> = HashMap::new();
+    let mut values: HashMap<Pubkey, i8> = HashMap::new();
 
     if !user_account.is_signer {
         msg!("User account must sign the transaction");
@@ -28,7 +28,7 @@ pub fn process_instruction(
     let instruction = instruction_data[0];
     match instruction {
         0 => {
-            divide(&mut counters, *user_account.key)?;
+            divide(&mut values, *user_account.key)?;
         }
         _ => {
             msg!("Invalid action");
@@ -39,8 +39,8 @@ pub fn process_instruction(
     Ok(())
 }
 
-pub fn divide(counters: &mut HashMap<Pubkey, i8>, user: Pubkey) -> Result<(), ProgramError>  {
-    let entry = counters.entry(user).or_insert(0);
+pub fn divide(values: &mut HashMap<Pubkey, i8>, user: Pubkey) -> Result<(), ProgramError>  {
+    let entry = values.entry(user).or_insert(0);
     let a_number = -128 / -1;
     *entry = a_number;
     
