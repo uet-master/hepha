@@ -4,9 +4,6 @@ resolver = "2"
 members = [
   "annotations",
   "checker",
-  "standard_contracts",
-  "contracts/reentrancy/basis", 
-  "contracts/reentrancy/cross_function", 
   "contracts/arithmetic/contract_one",
   "contracts/arithmetic/contract_two",
   "contracts/arithmetic/contract_three", 
@@ -46,7 +43,17 @@ members = [
   "contracts/time_manipulation/contract_seven",
   "contracts/time_manipulation/contract_eight",
   "contracts/time_manipulation/contract_nine",
-  "contracts/time_manipulation/contract_ten"]
+  "contracts/time_manipulation/contract_ten",
+  "contracts/reentrancy/contract_one", 
+  "contracts/reentrancy/contract_two",
+  "contracts/reentrancy/contract_three",
+  "contracts/reentrancy/contract_four",
+  "contracts/reentrancy/contract_five",
+  "contracts/reentrancy/contract_six",
+  "contracts/reentrancy/contract_seven",
+  "contracts/reentrancy/contract_eight",
+  "contracts/reentrancy/contract_nine",
+  "contracts/reentrancy/contract_ten"]
 
 [profile.release]
 debug = true

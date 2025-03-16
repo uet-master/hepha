@@ -1,5 +1,5 @@
 [package]
-name = "cross-function"
+name = "reentrancy-contract-one"
 version = "0.1.0"
 edition = "2024"
 
