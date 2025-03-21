@@ -173,7 +173,7 @@ impl NumericalPrecisionErrorChecker {
     }
 
     /// Check if the numerical precision error happens. The numerical precision error will 
-    /// possibly happens if  ``round`` function owned by ``float`` data type is used
+    /// possibly happens if ``round`` function owned by ``float`` data type is used
     pub fn check(&self) -> bool {
         return self.check_for_round_func;
     }
