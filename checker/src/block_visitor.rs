@@ -678,7 +678,7 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
         
         let callee_name =  utils::summary_key_str(self.bv.tcx, callee_def_id);
         // Numerical precision error is here
-        if callee_name.contains("std.f64.implement_f64.round") {
+        if callee_name.contains(".round") {
             self.bv.numerical_precision_checker.check_for_round_func = true;
             self.bv.numerical_precision_checker.numerical_precision_error_span = self.bv.current_span;
         }
