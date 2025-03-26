@@ -4,8 +4,9 @@ use solana_program::{
     entrypoint,
     entrypoint::ProgramResult,
     program_error::ProgramError,
-    pubkey::Pubkey,
+    pubkey::Pubkey
 };
+use solana_system_interface::instruction;
 use std::collections::HashMap;
 
 entrypoint!(process_instruction);
@@ -17,7 +18,6 @@ pub fn process_instruction(
 ) -> ProgramResult {
     let accounts_iter = &mut accounts.iter();
     let user_account = next_account_info(accounts_iter)?;
-    let contract_account = next_account_info(accounts_iter)?;
 
     let mut balances: HashMap<Pubkey, u64> = HashMap::new();
     let instruction = instruction_data[0];
@@ -25,10 +25,10 @@ pub fn process_instruction(
         0 => {
             let amount = u64::from_le_bytes(instruction_data[1..9].try_into().unwrap());
             msg!("User deposits {} lamports", amount);
-            deposit(&mut balances,amount, user_account, contract_account)?;
+            deposit(&mut balances, accounts, amount)?;
         }
         1 => {
-            withdraw_random_amount(&mut balances, user_account, contract_account)?;
+            withdraw_all(&mut balances, accounts)?;
         }
         _ => {
             msg!("Invalid action");
@@ -46,12 +46,11 @@ pub fn process_instruction(
     Ok(())
 }
 
-pub fn deposit(
-    balances: &mut HashMap<Pubkey, u64>, 
-    amount: u64,
-    user_account: &AccountInfo,
-    contract_account: &AccountInfo
-) -> Result<(), ProgramError>  {
+pub fn deposit(balances: &mut HashMap<Pubkey, u64>, accounts: &[AccountInfo], amount: u64) -> Result<(), ProgramError>  {
+    let accounts_iter = &mut accounts.iter();
+    let user_account = next_account_info(accounts_iter)?;
+    let contract_account = next_account_info(accounts_iter)?;
+
     if !user_account.is_signer {
         msg!("User account must sign the transaction");
         return Err(ProgramError::MissingRequiredSignature);
@@ -59,32 +58,25 @@ pub fn deposit(
 
     let entry = balances.entry(*user_account.key).or_insert(0);
     *entry += amount;
-    
-    **user_account.try_borrow_mut_lamports()? -= amount;
-    **contract_account.try_borrow_mut_lamports()? += amount;
+
+    instruction::transfer(user_account.key, contract_account.key, amount);
     Ok(())
 }
 
-pub fn withdraw_random_amount(
-    balances: &mut HashMap<Pubkey, u64>,  
-    user_account: &AccountInfo,
-    contract_account: &AccountInfo
-) -> Result<(), ProgramError> {
+pub fn withdraw_all(balances: &mut HashMap<Pubkey, u64>, accounts: &[AccountInfo]) -> Result<(), ProgramError> {
+    let accounts_iter = &mut accounts.iter();
+    let user_account = next_account_info(accounts_iter)?;
+    let contract_account = next_account_info(accounts_iter)?;
+
     if !contract_account.is_signer {
         msg!("Contract account must sign the transaction");
         return Err(ProgramError::MissingRequiredSignature);
     }
 
     let balance = balances.get_mut(user_account.key).ok_or(ProgramError::InvalidAccountData)?;
-    let mut random_amount = 0;
-    for _i in 1..10 {
-        random_amount = fastrand::u64(0..*balance);
-    } 
+    instruction::transfer(contract_account.key, user_account.key, *balance);
 
-    **contract_account.try_borrow_mut_lamports()? -= random_amount;
-    **user_account.try_borrow_mut_lamports()? += random_amount;
-
-    *balance -= random_amount;
+    *balance = 0;
     Ok(())
 }
 

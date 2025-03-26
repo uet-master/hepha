@@ -20,21 +20,15 @@ pub fn process_instruction(
     let contract_account = next_account_info(accounts_iter)?;
 
     let mut balances: HashMap<Pubkey, u64> = HashMap::new();
-
-    if !user_account.is_signer {
-        msg!("User account must sign the transaction");
-        return Err(ProgramError::MissingRequiredSignature);
-    }
-
     let instruction = instruction_data[0];
     match instruction {
         0 => {
             let amount = u64::from_le_bytes(instruction_data[1..9].try_into().unwrap());
             msg!("User deposits {} lamports", amount);
-            deposit(&mut balances, *user_account.key, amount, user_account, contract_account)?;
+            deposit(&mut balances, amount, user_account, contract_account)?;
         }
         1 => {
-            withdraw_all(&mut balances, user_account.key, user_account, contract_account)?;
+            withdraw_all(&mut balances, user_account, contract_account)?;
         }
         _ => {
             msg!("Invalid action");
@@ -54,12 +48,16 @@ pub fn process_instruction(
 
 pub fn deposit(
     balances: &mut HashMap<Pubkey, u64>, 
-    user: Pubkey, 
     amount: u64,
     user_account: &AccountInfo,
     contract_account: &AccountInfo
 ) -> Result<(), ProgramError>  {
-    let entry = balances.entry(user).or_insert(0);
+    if !user_account.is_signer {
+        msg!("User account must sign the transaction");
+        return Err(ProgramError::MissingRequiredSignature);
+    }
+
+    let entry = balances.entry(*user_account.key).or_insert(0);
     *entry += amount;
     
     **user_account.try_borrow_mut_lamports()? -= amount;
@@ -69,11 +67,15 @@ pub fn deposit(
 
 pub fn withdraw_all(
     balances: &mut HashMap<Pubkey, u64>,  
-    user: &Pubkey, 
     user_account: &AccountInfo,
     contract_account: &AccountInfo
 ) -> Result<(), ProgramError> {
-    let balance = balances.get_mut(user).ok_or(ProgramError::InvalidAccountData)?;
+    if !contract_account.is_signer {
+        msg!("Contract account must sign the transaction");
+        return Err(ProgramError::MissingRequiredSignature);
+    }
+
+    let balance = balances.get_mut(user_account.key).ok_or(ProgramError::InvalidAccountData)?;
 
     **contract_account.try_borrow_mut_lamports()? = 0;
     **user_account.try_borrow_mut_lamports()? += *balance;

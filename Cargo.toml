@@ -14,6 +14,8 @@ members = [
   "contracts/arithmetic/contract_eight", 
   "contracts/arithmetic/contract_nine", 
   "contracts/arithmetic/contract_ten", 
+  "contracts/arithmetic/contract_eleven", 
+  "contracts/arithmetic/contract_twelve", 
   "contracts/bad_randomness/contract_one",
   "contracts/bad_randomness/contract_two", 
   "contracts/bad_randomness/contract_three",
@@ -24,6 +26,8 @@ members = [
   "contracts/bad_randomness/contract_eight",
   "contracts/bad_randomness/contract_nine",
   "contracts/bad_randomness/contract_ten",
+  "contracts/bad_randomness/contract_eleven",
+  "contracts/bad_randomness/contract_twelve",
   "contracts/numerical_precision/contract_one", 
   "contracts/numerical_precision/contract_two",
   "contracts/numerical_precision/contract_three",
@@ -34,6 +38,8 @@ members = [
   "contracts/numerical_precision/contract_eight",
   "contracts/numerical_precision/contract_nine",
   "contracts/numerical_precision/contract_ten",
+  "contracts/numerical_precision/contract_eleven",
+  "contracts/numerical_precision/contract_twelve",
   "contracts/time_manipulation/contract_one", 
   "contracts/time_manipulation/contract_two",
   "contracts/time_manipulation/contract_three",
@@ -44,6 +50,8 @@ members = [
   "contracts/time_manipulation/contract_eight",
   "contracts/time_manipulation/contract_nine",
   "contracts/time_manipulation/contract_ten",
+  "contracts/time_manipulation/contract_eleven",
+  "contracts/time_manipulation/contract_twelve",
   "contracts/reentrancy/contract_one", 
   "contracts/reentrancy/contract_two",
   "contracts/reentrancy/contract_three",
@@ -53,7 +61,9 @@ members = [
   "contracts/reentrancy/contract_seven",
   "contracts/reentrancy/contract_eight",
   "contracts/reentrancy/contract_nine",
-  "contracts/reentrancy/contract_ten"]
+  "contracts/reentrancy/contract_ten",
+  "contracts/reentrancy/contract_eleven",
+  "contracts/reentrancy/contract_twelve"]
 
 [profile.release]
 debug = true
