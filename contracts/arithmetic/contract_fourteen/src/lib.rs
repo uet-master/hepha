@@ -26,8 +26,7 @@ pub fn process_instruction(
     }
 
     let instruction = instruction_data[0];
-    let data = user_account.try_borrow_mut_data()?;
-    let amount = u64::from_le_bytes(data[..8].try_into().unwrap());
+    let amount = u64::from_le_bytes(instruction_data[1..9].try_into().unwrap());
     match instruction {
         0 => {
             add(&mut values, *user_account.key, amount)?;
@@ -47,9 +46,7 @@ pub fn add(
     amount: u64,
 ) -> Result<(), ProgramError>  {
     let entry = values.entry(user).or_insert(0);
-    *entry += amount + 50;
+    *entry += amount * 60 + 140;
     
     Ok(())
 }
-
-

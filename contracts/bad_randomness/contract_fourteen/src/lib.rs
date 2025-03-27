@@ -26,11 +26,9 @@ pub fn process_instruction(
     }
 
     let instruction = instruction_data[0];
-    let data = user_account.try_borrow_mut_data()?;
-    let amount = u64::from_le_bytes(data[..8].try_into().unwrap());
     match instruction {
         0 => {
-            add(&mut values, *user_account.key, amount)?;
+            substract(&mut values, *user_account.key)?;
         }
         _ => {
             msg!("Invalid action");
@@ -41,15 +39,9 @@ pub fn process_instruction(
     Ok(())
 }
 
-pub fn add(
-    values: &mut HashMap<Pubkey, u64>, 
-    user: Pubkey, 
-    amount: u64,
-) -> Result<(), ProgramError>  {
+pub fn substract(values: &mut HashMap<Pubkey, u64>, user: Pubkey) -> Result<(), ProgramError>  {
     let entry = values.entry(user).or_insert(0);
-    *entry += amount + 50;
+    *entry -= fastrand::u64(1..350);
     
     Ok(())
 }
-
-

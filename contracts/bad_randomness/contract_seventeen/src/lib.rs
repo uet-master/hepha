@@ -7,6 +7,8 @@ use solana_program::{
     pubkey::Pubkey,
 };
 use std::collections::HashMap;
+use oorandom::Rand64;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 entrypoint!(process_instruction);
 
@@ -26,11 +28,9 @@ pub fn process_instruction(
     }
 
     let instruction = instruction_data[0];
-    let data = user_account.try_borrow_mut_data()?;
-    let amount = u64::from_le_bytes(data[..8].try_into().unwrap());
     match instruction {
         0 => {
-            add(&mut values, *user_account.key, amount)?;
+            substract(&mut values, *user_account.key)?;
         }
         _ => {
             msg!("Invalid action");
@@ -41,15 +41,12 @@ pub fn process_instruction(
     Ok(())
 }
 
-pub fn add(
-    values: &mut HashMap<Pubkey, u64>, 
-    user: Pubkey, 
-    amount: u64,
-) -> Result<(), ProgramError>  {
+pub fn substract(values: &mut HashMap<Pubkey, u64>, user: Pubkey) -> Result<(), ProgramError>  {
     let entry = values.entry(user).or_insert(0);
-    *entry += amount + 50;
+    let seed = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
+    let mut rng = Rand64::new(seed.into());
+    let random_number = rng.rand_range(1..250) * 5;
+    *entry -= random_number;
     
     Ok(())
 }
-
-

@@ -18,7 +18,7 @@ pub fn process_instruction(
     let accounts_iter = &mut accounts.iter();
     let user_account = next_account_info(accounts_iter)?;
 
-    let mut values: HashMap<Pubkey, u64> = HashMap::new();
+    let mut balances: HashMap<Pubkey, u64> = HashMap::new();
 
     if !user_account.is_signer {
         msg!("User account must sign the transaction");
@@ -30,7 +30,7 @@ pub fn process_instruction(
     let amount = u64::from_le_bytes(data[..8].try_into().unwrap());
     match instruction {
         0 => {
-            add(&mut values, *user_account.key, amount)?;
+            add(&mut balances, *user_account.key, amount)?;
         }
         _ => {
             msg!("Invalid action");
@@ -42,14 +42,12 @@ pub fn process_instruction(
 }
 
 pub fn add(
-    values: &mut HashMap<Pubkey, u64>, 
+    balances: &mut HashMap<Pubkey, u64>, 
     user: Pubkey, 
     amount: u64,
 ) -> Result<(), ProgramError>  {
-    let entry = values.entry(user).or_insert(0);
-    *entry += amount + 50;
+    let entry = balances.entry(user).or_insert(0);
+    *entry = *entry + (amount * 80);
     
     Ok(())
 }
-
-

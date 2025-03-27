@@ -1,0 +1,10 @@
+[package]
+name = "reentrancy-contract-nineteen"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+solana-program = "2.1.7"
+solana-system-interface = "1.0.0"
+borsh = "0.9.3"
+borsh-derive = "0.9.1"

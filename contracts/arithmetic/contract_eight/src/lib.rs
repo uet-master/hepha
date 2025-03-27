@@ -47,7 +47,7 @@ pub fn multiply(
     sample_number: u64,
 ) -> Result<(), ProgramError>  {
     let entry = values.entry(user).or_insert(0);
-    *entry *= sample_number;
+    *entry *= sample_number + 90;
     
     Ok(())
 }

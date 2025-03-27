@@ -1,7 +1,8 @@
 [package]
-name = "arithmetic-contract-ten"
+name = "bad-randomness-contract-sixteen"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
 solana-program = "2.1.7"
+oorandom = "11.1"
