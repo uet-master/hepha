@@ -1,7 +1,0 @@
-[package]
-name = "arithmetic-contract-sixteen"
-version = "0.1.0"
-edition = "2024"
-
-[dependencies]
-solana-program = "2.1.7"

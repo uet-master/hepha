@@ -1704,7 +1704,7 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
                 BoundsCheck { .. } => "index out of bounds",
                 MisalignedPointerDereference { .. } => "misaligned pointer dereference",
                 Overflow(BinOp::Add, _, _) => "attempt to add with overflow",
-                Overflow(BinOp::Sub, _, _) => "attempt to subtract with overflow",
+                Overflow(BinOp::Sub, _, _) => "attempt to subtract with underflow",
                 Overflow(BinOp::Mul, _, _) => "attempt to multiply with overflow",
                 Overflow(BinOp::Div, _, _) => "attempt to divide with overflow",
                 Overflow(BinOp::Rem, _, _) => "attempt to calculate the remainder with overflow",
