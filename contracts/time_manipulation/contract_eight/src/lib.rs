@@ -34,7 +34,6 @@ pub fn process_instruction(
             deposit(&mut contract_balance, amount, user_account, contract_account)?;
         }
         1 => {
-            msg!("User withdraws {} lamports", amount);
             announce_winner(&mut contract_balance, user_account, contract_account)?;
         }
         _ => {
