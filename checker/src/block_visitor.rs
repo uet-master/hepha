@@ -154,7 +154,6 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
     /// Write the RHS Rvalue to the LHS Place.
     #[logfn_inputs(TRACE)]
     fn visit_assign(&mut self, place: &mir::Place<'tcx>, rvalue: &mir::Rvalue<'tcx>) {
-        info!("Place {:?}, rvalue {:?}", place, rvalue);
         self.bv.reentrancy_checker.current_assign_destination = Some(*place);
         let mut path = self.visit_lh_place(place);
         match &path.value {
@@ -225,8 +224,6 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
         place: &mir::Place<'tcx>,
         variant_index: rustc_target::abi::VariantIdx,
     ) {
-        info!("Place {:?} and variant_index {:?}", place, variant_index);
-
         let target_path = Path::new_discriminant(self.visit_rh_place(place));
         let ty = self
             .type_visitor()
