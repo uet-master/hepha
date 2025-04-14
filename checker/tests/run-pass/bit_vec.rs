@@ -6,7 +6,7 @@
 
 // A test that checks relaxed mode preconditions for conditions that overflow in size
 
-// MIRAI_FLAGS --diag=default
+// HEPHA_FLAGS --diag=default
 
 #![allow(dead_code)]
 

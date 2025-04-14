@@ -6,7 +6,7 @@
 
 // A test that calls visit_repeat
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn test1() {
     let x = [1; 2];

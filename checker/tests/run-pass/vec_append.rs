@@ -6,7 +6,7 @@
 
 // This tests the Vector append method
 
-// use mirai_annotations::*;
+// use hepha_annotations::*;
 
 pub fn t1() {
     // let mut v1: Vec<i32> = Vec::new();

@@ -6,7 +6,7 @@
 
 use std::mem;
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn test1() {
     verify!(mem::size_of_val(&5i32) == 4);

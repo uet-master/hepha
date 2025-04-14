@@ -4,9 +4,9 @@
 // LICENSE file in the root directory of this source tree.
 //
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
-// MIRAI_FLAGS --test_only
+// HEPHA_FLAGS --test_only
 
 #[test]
 fn some_test() {

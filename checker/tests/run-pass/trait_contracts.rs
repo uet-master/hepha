@@ -4,11 +4,11 @@
 // LICENSE file in the root directory of this source tree.
 //
 
-// This tests the devirtualization needed for the contracts crate to work for MIRAI.
+// This tests the devirtualization needed for the contracts crate to work for HEPHA.
 
-// MIRAI_FLAGS --test_only
+// HEPHA_FLAGS --test_only
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 // Without using contracts crate directly, this is what #[contract_trait] will generate.
 trait Adder {

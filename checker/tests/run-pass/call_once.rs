@@ -6,7 +6,7 @@
 
 // A test that calls a closure via FnOnce::call_once
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 fn call_once<F, T, V>(f: F, arg: (T, V)) -> T
 where

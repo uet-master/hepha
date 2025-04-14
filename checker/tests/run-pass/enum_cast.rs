@@ -6,7 +6,7 @@
 
 // A test that casts an enum value to an unsigned integer value
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 enum Foo {
     BarOne = 1,

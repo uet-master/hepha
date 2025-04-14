@@ -6,7 +6,7 @@
 
 // A test that uses a cast in a verify condition.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 fn foo(i: u16) {
     if i > 16 {

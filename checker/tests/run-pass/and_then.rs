@@ -6,7 +6,7 @@
 
 // A test that calls Option::and_then
 
-// use mirai_annotations::*;
+// use hepha_annotations::*;
 //
 // fn sq(x: u32) -> Option<u32> {
 //     Some(x * x)

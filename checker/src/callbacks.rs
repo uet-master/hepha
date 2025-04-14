@@ -84,7 +84,7 @@ impl rustc_driver::Callbacks for MiraiCallbacks {
             info!("in test only mode");
             self.options.test_only = true;
         }
-        config.crate_cfg.push("mirai".to_string());
+        config.crate_cfg.push("hepha".to_string());
         match &config.output_dir {
             None => {
                 self.output_directory = std::env::temp_dir();
@@ -114,12 +114,12 @@ impl rustc_driver::Callbacks for MiraiCallbacks {
             // No need to analyze a build script, but do generate code.
             return Compilation::Continue;
         }
-        self.analyze_with_mirai(compiler, tcx);
+        self.analyze_with_hepha(compiler, tcx);
         if self.test_run {
             // We avoid code gen for test cases because LLVM is not used in a thread safe manner.
             Compilation::Stop
         } else {
-            // Although MIRAI is only a checker, cargo still needs code generation to work.
+            // Although HEPHA is only a checker, cargo still needs code generation to work.
             Compilation::Continue
         }
     }
@@ -128,7 +128,7 @@ impl rustc_driver::Callbacks for MiraiCallbacks {
 impl MiraiCallbacks {
     /// Analyze the crate currently being compiled, using the information given in compiler and tcx.
     #[logfn(TRACE)]
-    fn analyze_with_mirai<'tcx>(&mut self, compiler: &interface::Compiler, tcx: TyCtxt<'tcx>) {
+    fn analyze_with_hepha<'tcx>(&mut self, compiler: &interface::Compiler, tcx: TyCtxt<'tcx>) {
         if self.options.print_function_names {
             for local_def_id in tcx.hir().body_owners() {
                 let def_id = local_def_id.to_def_id();
@@ -140,7 +140,7 @@ impl MiraiCallbacks {
             return;
         }
         let output_dir = String::from(self.output_directory.to_str().expect("valid string"));
-        let summary_store_path = if std::env::var("MIRAI_SHARE_PERSISTENT_STORE").is_ok() {
+        let summary_store_path = if std::env::var("HEPHA_SHARE_PERSISTENT_STORE").is_ok() {
             output_dir
         } else {
             let temp_dir = TempDir::new().expect("failed to create a temp dir");

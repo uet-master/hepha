@@ -8,7 +8,7 @@
 #![allow(arithmetic_overflow)]
 #![allow(unconditional_panic)]
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn tu8_overflowing_mul() {
     let a: u8 = 255;

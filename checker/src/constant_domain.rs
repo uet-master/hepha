@@ -5,7 +5,7 @@
 #![allow(clippy::float_cmp)]
 
 use log_derive::{logfn, logfn_inputs};
-use mirai_annotations::*;
+use hepha_annotations::*;
 use rustc_hir::def_id::DefId;
 use rustc_middle::ty::{GenericArgsRef, Ty, TyCtxt};
 use serde::{Deserialize, Serialize};

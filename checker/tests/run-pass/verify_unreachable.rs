@@ -8,7 +8,7 @@
 
 #![allow(unused)]
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn foo1(i: i32) {
     if i < 10 {

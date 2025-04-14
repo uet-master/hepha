@@ -6,7 +6,7 @@
 
 // A test which checks whether constraints are propagated for captured values.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     call(1);

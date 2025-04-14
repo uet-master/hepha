@@ -5,7 +5,7 @@
 
 // A test for transmutation of floating point numbers to integers
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn t1() {
     verify!((12.5f64).to_bits() == 0x4029000000000000);

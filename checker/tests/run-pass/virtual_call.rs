@@ -6,7 +6,7 @@
 
 // A test that checks that closure fields are tracked accurately.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     let x = 1;

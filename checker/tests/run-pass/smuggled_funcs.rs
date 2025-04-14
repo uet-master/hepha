@@ -5,7 +5,7 @@
 
 // A test to see that functions accessed via fields and indirections are passed in during analysis
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub struct ContainsFunc {
     pub func: fn() -> i32,

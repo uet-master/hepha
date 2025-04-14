@@ -4,7 +4,7 @@
 // LICENSE file in the root directory of this source tree.
 //
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 const HEX_CHARS_LOWER: &[u8; 16] = b"0123456789abcdef";
 

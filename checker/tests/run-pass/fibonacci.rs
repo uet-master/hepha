@@ -6,7 +6,7 @@
 
 // A test that checks for widening in recursive loops
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 fn fib(x: u64) -> u64 {
     match x {

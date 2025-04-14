@@ -6,7 +6,7 @@
 
 // A test that increments a counter inside a while loop
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn foo(n: usize) {
     let mut i: usize = 0;

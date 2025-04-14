@@ -15,7 +15,7 @@ use std::rc::Rc;
 use log_derive::{logfn, logfn_inputs};
 use serde::{Deserialize, Serialize};
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 use crate::bool_domain::BoolDomain;
 use crate::constant_domain::ConstantDomain;
@@ -29,7 +29,7 @@ use crate::path::{Path, PathEnum, PathSelector};
 use crate::path::{PathRefinement, PathRoot};
 use crate::tag_domain::{Tag, TagDomain};
 
-// See https://github.com/endorlabs/MIRAI/blob/main/documentation/AbstractValues.md.
+// See https://github.com/endorlabs/HEPHA/blob/main/documentation/AbstractValues.md.
 
 /// Mirai is an abstract interpreter and thus produces abstract values.
 /// In general, an abstract value is a value that is not fully known.

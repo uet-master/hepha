@@ -8,21 +8,21 @@ use clap::parser::ValueSource;
 use clap::{Arg, Command};
 use itertools::Itertools;
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 use rustc_session::EarlyDiagCtxt;
 
 /// Creates the clap::Command metadata for argument parsing.
 fn make_options_parser(running_test_harness: bool) -> Command {
     // We could put this into lazy_static! with a Mutex around, but we really do not expect
     // to construct this more than once per regular program run.
-    let mut parser = Command::new("MIRAI")
+    let mut parser = Command::new("HEPHA")
         .no_binary_name(true)
         .version("v1.1.7")
         .arg(Arg::new("single_func")
             .long("single_func")
             .num_args(1)
             .help("Focus analysis on the named function.")
-            .long_help("Name is the simple name of a top-level crate function or a MIRAI summary key."))
+            .long_help("Name is the simple name of a top-level crate function or a HEPHA summary key."))
         .arg(Arg::new("diag")
             .long("diag")
             .num_args(1)
@@ -39,13 +39,13 @@ fn make_options_parser(running_test_harness: bool) -> Command {
             .long("body_analysis_timeout")
             .num_args(1)
             .default_value("30")
-            .help("The maximum number of seconds that MIRAI will spend analyzing a function body.")
+            .help("The maximum number of seconds that HEPHA will spend analyzing a function body.")
             .long_help("The default is 30 seconds."))
         .arg(Arg::new("crate_analysis_timeout")
             .long("crate_analysis_timeout")
             .num_args(1)
             .default_value("240")
-            .help("The maximum number of seconds that MIRAI will spend analyzing a function body.")
+            .help("The maximum number of seconds that HEPHA will spend analyzing a function body.")
             .long_help("The default is 240 seconds."))
         .arg(Arg::new("statistics")
             .long("statistics")
@@ -56,7 +56,7 @@ fn make_options_parser(running_test_harness: bool) -> Command {
             .long("call_graph_config")
             .num_args(1)
             .help("Path call graph config.")
-            .long_help(r#"Path to a JSON file that configures call graph output. Please see the documentation for details (https://github.com/endorlabs/MIRAI/blob/main/documentation/CallGraph.md)."#))
+            .long_help(r#"Path to a JSON file that configures call graph output. Please see the documentation for details (https://github.com/endorlabs/HEPHA/blob/main/documentation/CallGraph.md)."#))
         .arg(Arg::new("print_function_names")
             .long("print_function_names")
             .num_args(0)
@@ -75,7 +75,7 @@ fn make_options_parser(running_test_harness: bool) -> Command {
     parser
 }
 
-/// Represents options passed to MIRAI.
+/// Represents options passed to HEPHA.
 #[derive(Debug, Default)]
 pub struct Options {
     pub single_func: Option<String>,
@@ -135,35 +135,35 @@ impl Options {
         handler: &EarlyDiagCtxt,
         running_test_harness: bool,
     ) -> Vec<String> {
-        let mut mirai_args_end = args.len();
+        let mut hepha_args_end = args.len();
         let mut rustc_args_start = 0;
         if let Some((p, _)) = args.iter().find_position(|s| s.as_str() == "--") {
-            mirai_args_end = p;
+            hepha_args_end = p;
             rustc_args_start = p + 1;
         }
-        let mirai_args = &args[0..mirai_args_end];
+        let hepha_args = &args[0..hepha_args_end];
         let matches = if rustc_args_start == 0 {
-            // The arguments may not be intended for MIRAI and may get here
+            // The arguments may not be intended for HEPHA and may get here
             // via some tool, so do not report errors here, but just assume
-            // that the arguments were not meant for MIRAI.
-            match make_options_parser(running_test_harness).try_get_matches_from(mirai_args.iter())
+            // that the arguments were not meant for HEPHA.
+            match make_options_parser(running_test_harness).try_get_matches_from(hepha_args.iter())
             {
                 Ok(matches) => {
-                    // Looks like these are MIRAI options after all and there are no rustc options.
+                    // Looks like these are HEPHA options after all and there are no rustc options.
                     rustc_args_start = args.len();
                     matches
                 }
                 Err(e) => match e.kind() {
                     ErrorKind::DisplayHelp => {
-                        // help is ambiguous, so display both MIRAI and rustc help.
+                        // help is ambiguous, so display both HEPHA and rustc help.
                         eprintln!("{e}");
                         return args.to_vec();
                     }
                     ErrorKind::UnknownArgument => {
                         // Just send all the arguments to rustc.
-                        // Note that this means that MIRAI options and rustc options must always
-                        // be separated by --. I.e. any  MIRAI options present in arguments list
-                        // will stay unknown to MIRAI and will make rustc unhappy.
+                        // Note that this means that HEPHA options and rustc options must always
+                        // be separated by --. I.e. any  HEPHA options present in arguments list
+                        // will stay unknown to HEPHA and will make rustc unhappy.
                         return args.to_vec();
                     }
                     _ => {
@@ -173,8 +173,8 @@ impl Options {
                 },
             }
         } else {
-            // This will display error diagnostics for arguments that are not valid for MIRAI.
-            make_options_parser(running_test_harness).get_matches_from(mirai_args.iter())
+            // This will display error diagnostics for arguments that are not valid for HEPHA.
+            make_options_parser(running_test_harness).get_matches_from(hepha_args.iter())
         };
 
         if matches.contains_id("single_func") {

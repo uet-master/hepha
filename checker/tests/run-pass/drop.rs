@@ -6,7 +6,7 @@
 
 // A test that checks that drop handlers are correctly analyzed
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 struct Guard<'a> {
     i: &'a mut i32,

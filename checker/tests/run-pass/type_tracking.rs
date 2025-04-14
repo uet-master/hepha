@@ -6,7 +6,7 @@
 
 // Checks that argument types are tracked across return results
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub trait Tr {
     fn bar(&self) -> i32 {

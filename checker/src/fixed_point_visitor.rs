@@ -10,7 +10,7 @@ use std::rc::Rc;
 use log_derive::*;
 use rpds::{HashTrieMap, HashTrieSet};
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 use rustc_data_structures::graph::dominators::Dominators;
 use rustc_middle::mir;
 use rustc_span::{Span, SyntaxContext};

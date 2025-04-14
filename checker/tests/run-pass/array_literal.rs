@@ -6,7 +6,7 @@
 
 // A test that calls visit_aggregate
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     let x = [1, 2];

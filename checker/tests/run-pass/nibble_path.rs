@@ -6,7 +6,7 @@
 
 // A test that checks that inferred preconditions with disjunctions can be promoted.
 
-// MIRAI_FLAGS --diag=verify
+// HEPHA_FLAGS --diag=verify
 
 #![allow(dead_code)]
 pub struct Nibble(u8);

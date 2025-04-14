@@ -9,7 +9,7 @@
 #![allow(internal_features)]
 #![feature(core_intrinsics)]
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 use std::mem;
 
 pub enum Foo {

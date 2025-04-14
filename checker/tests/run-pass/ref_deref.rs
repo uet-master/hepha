@@ -6,7 +6,7 @@
 
 // A test that uses PathSelector::Deref and Expression::Reference
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     let a: &[i32] = &[10, 20];

@@ -4,13 +4,13 @@
 // LICENSE file in the root directory of this source tree.
 //
 
-// MIRAI_FLAGS --diag=default
+// HEPHA_FLAGS --diag=default
 
 // A test that calls a function with a false precondition unconditionally from an analysis root
 
-#![cfg_attr(mirai, allow(incomplete_features), feature(generic_const_exprs))]
+#![cfg_attr(hepha, allow(incomplete_features), feature(generic_const_exprs))]
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 struct SecretTaintKind<const MASK: TagPropagationSet> {}
 const MASK: TagPropagationSet = TAG_PROPAGATION_ALL;

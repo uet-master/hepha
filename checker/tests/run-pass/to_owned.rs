@@ -5,7 +5,7 @@
 
 // A test for transmutation of floating point numbers to integers
 
-// use mirai_annotations::*;
+// use hepha_annotations::*;
 //
 // pub struct Identifier(Box<str>);
 //

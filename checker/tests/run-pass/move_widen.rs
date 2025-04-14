@@ -6,7 +6,7 @@
 
 // A test that copies widened values
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn t1(n: u32) {
     let mut i: u32 = 0;

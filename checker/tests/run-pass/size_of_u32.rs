@@ -7,7 +7,7 @@
 // A test that checks that size_of::<u32>() is mangled correctly.
 #![allow(non_snake_case)]
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 use std::mem::size_of;
 
 pub fn main() {

@@ -6,7 +6,7 @@
 
 // A test that declares a precondition and report a failure to satisfy it.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     let mut a = [1, 2];

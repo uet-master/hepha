@@ -6,7 +6,7 @@
 
 // A test that checks that u32::max_value and str::as_bytes(&self) are mangled correctly.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub mod foreign_contracts {
     pub mod core {

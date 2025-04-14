@@ -4,7 +4,7 @@
 // LICENSE file in the root directory of this source tree.
 
 use log_derive::*;
-use mirai_annotations::*;
+use hepha_annotations::*;
 use rustc_middle::ty::{FloatTy, IntTy, Ty, TyCtxt, TyKind, UintTy};
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;

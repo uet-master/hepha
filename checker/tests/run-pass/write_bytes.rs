@@ -6,7 +6,7 @@
 
 // A test that uses intrinsics::write_bytes
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 fn foo<T>(a: &mut [T; 2]) {
     unsafe {

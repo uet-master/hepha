@@ -5,7 +5,7 @@
 
 // A test that fieldless enums can have explicitly defined values for discriminants
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 enum SomeEnumA {
     VariantN33 = -33,

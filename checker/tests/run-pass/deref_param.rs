@@ -6,7 +6,7 @@
 
 // A test that checks that a function can return a copy of its parameter.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn foo<P>(f: &P) -> P
 where

@@ -6,7 +6,7 @@
 
 // A test that checks that function pointers get resolved
 
-// MIRAI_FLAGS --single_func=function_pointer_resolution.bench.run
+// HEPHA_FLAGS --single_func=function_pointer_resolution.bench.run
 
 pub mod traits {
     pub mod lib {

@@ -17,7 +17,7 @@ use log_derive::{logfn, logfn_inputs};
 use serde::{Deserialize, Serialize};
 use sled::{Config, Db};
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 use rustc_hir::def_id::DefId;
 use rustc_middle::ty::{Ty, TyCtxt};
 use rustc_span::Span;
@@ -121,7 +121,7 @@ pub struct Precondition {
     /// A stack of source locations that lead to the definition of the precondition (or the source
     /// expression/statement that would panic if the precondition is not met). It is a stack
     /// because the precondition might have been promoted (when a non-public function does not meet
-    /// a precondition of a function it calls, MIRAI infers a precondition that will allow it to
+    /// a precondition of a function it calls, HEPHA infers a precondition that will allow it to
     /// meet the precondition of the call, so things stack up).
     /// Because this situation arises for non-public functions, it is possible to use source spans
     /// rather than strings to track the locations where the promotions happen.
@@ -468,7 +468,7 @@ impl<'tcx> SummaryCache<'tcx> {
 
     /// Creates a Sled database at the given directory path, if it does not already exist.
     /// The initial value of the database contains summaries of standard library functions.
-    /// The code used to create these summaries are mirai/standard_contracts.
+    /// The code used to create these summaries are hepha/standard_contracts.
     #[logfn_inputs(TRACE)]
     fn create_summary_store_if_needed(summary_store_directory_str: &str) -> std::path::PathBuf {
         use std::env;
@@ -479,10 +479,10 @@ impl<'tcx> SummaryCache<'tcx> {
 
         let directory_path = Path::new(summary_store_directory_str);
         let store_path = directory_path.join(".summary_store.sled");
-        if env::var("MIRAI_START_FRESH").is_ok() {
+        if env::var("HEPHA_START_FRESH").is_ok() {
             std::fs::remove_dir_all(directory_path).unwrap();
             std::fs::create_dir_all(directory_path).unwrap();
-        } else if env::var("MIRAI_SHARE_PERSISTENT_STORE").is_err() {
+        } else if env::var("HEPHA_SHARE_PERSISTENT_STORE").is_err() {
             info!("creating a new summary store from the embedded tar file");
             {
                 let tar_path = directory_path.join(".summary_store.tar");

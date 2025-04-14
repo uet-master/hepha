@@ -6,7 +6,7 @@
 
 // A test that pushes a value onto a non empty vec
 
-// use mirai_annotations::*;
+// use hepha_annotations::*;
 
 // fn write_u32_as_uleb128(binary: &mut Vec<u8>, value: u8) {
 //     binary.push(value);

@@ -8,7 +8,7 @@
 // In particular, if the left hand path is a local that binds to a reference, assignments
 // to the path should update the binding, not the target of the bound reference.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn t1() {
     let x = 1;

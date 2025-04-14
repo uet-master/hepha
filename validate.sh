@@ -20,14 +20,14 @@ cargo fmt --all
 # Run lint checks
 cargo audit
 cargo clippy --no-default-features --all-targets -- -D warnings
-# Build mirai (in debug mode) so that we can build the standard contracts
+# Build hepha (in debug mode) so that we can build the standard contracts
 cargo build --no-default-features
 
-# build the mirai-standard-contracts crate
+# build the hepha-standard-contracts crate
 touch standard_contracts/src/lib.rs
-cargo build --lib -p mirai-standard-contracts
+cargo build --lib -p hepha-standard-contracts
 touch standard_contracts/src/lib.rs
-RUSTC_WRAPPER=target/debug/mirai RUST_BACKTRACE=1 MIRAI_LOG=warn MIRAI_START_FRESH=true MIRAI_SHARE_PERSISTENT_STORE=true MIRAI_FLAGS="--diag=paranoid" cargo build --lib -p mirai-standard-contracts
+RUSTC_WRAPPER=target/debug/hepha RUST_BACKTRACE=1 HEPHA_LOG=warn HEPHA_START_FRESH=true HEPHA_SHARE_PERSISTENT_STORE=true HEPHA_FLAGS="--diag=paranoid" cargo build --lib -p hepha-standard-contracts
 
 # collect the summary store into a tar file
 cd target/debug/deps
@@ -39,10 +39,10 @@ cargo clean
 cargo build --tests $FLAGS
 time cargo test $FLAGS
 
-# Install MIRAI into cargo so that we can use optimized binaries to analyze debug binaries built with special flags
-cargo uninstall mirai || true
+# Install HEPHA into cargo so that we can use optimized binaries to analyze debug binaries built with special flags
+cargo uninstall hepha || true
 cargo install --path ./checker $FLAGS
 
-# Run mirai on itself, using the optimized build in cargo as the bootstrap.
-cargo clean -p mirai
-cargo mirai --no-default-features
+# Run hepha on itself, using the optimized build in cargo as the bootstrap.
+cargo clean -p hepha
+cargo hepha --no-default-features

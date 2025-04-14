@@ -7,7 +7,7 @@
 // Tests for std::slice::memcmp
 
 use core::cmp::Ordering;
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 fn compare_strings(str: &str) -> Ordering {
     str.cmp("foo")

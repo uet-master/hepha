@@ -6,7 +6,7 @@
 
 // A test that assigns to an unknown index of a mutable array parameter
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 fn test(a: &mut [i32; 4], i: usize) {
     a[i] = 666;

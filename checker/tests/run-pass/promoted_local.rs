@@ -6,7 +6,7 @@
 
 // A test that promotes a local from a callee to a caller
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub struct Foo {
     pub x: i64,

@@ -6,7 +6,7 @@
 
 // A test that assigns to a location of type struct that is unknown at compile time.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 struct Bool {
     content: bool,

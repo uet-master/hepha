@@ -17,7 +17,7 @@ use regex::Regex;
 use serde::ser::{SerializeMap, Serializer};
 use serde::{Deserialize, Serialize};
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 use rustc_hir::def_id::DefId;
 use rustc_middle::ty::TyCtxt;
 use rustc_span::Span;

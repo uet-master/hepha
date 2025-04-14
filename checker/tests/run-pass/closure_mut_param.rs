@@ -6,7 +6,7 @@
 
 // A test that uses a closure that side-effects a mutable captured variable
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 fn foo<F>(f: F)
 where

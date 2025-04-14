@@ -6,10 +6,10 @@
 
 // A test that uses a lazy static initializer
 
-// MIRAI_FLAGS --diag=default
+// HEPHA_FLAGS --diag=default
 
 use core::ops::Deref;
-use mirai_annotations::*;
+use hepha_annotations::*;
 use std::cell::{Cell, UnsafeCell};
 use std::hint::unreachable_unchecked;
 use std::marker::PhantomData;
@@ -158,7 +158,7 @@ fn initialize_inner(my_state_and_queue: &AtomicUsize, init: &mut dyn FnMut() -> 
             _ => {
                 // The assumption cannot be proved here or even promoted to a precondition
                 // because wait below conditionally pollutes my_state_and_queue with local state
-                // that it expects another thread to clean up. Since MIRAI is a single thread
+                // that it expects another thread to clean up. Since HEPHA is a single thread
                 // analysis, it cannot reason about such control flows and hence we have to assume this.
                 assume!(state_and_queue & STATE_MASK == RUNNING);
                 wait(&my_state_and_queue, state_and_queue);

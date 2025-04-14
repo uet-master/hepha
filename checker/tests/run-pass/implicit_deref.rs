@@ -5,7 +5,7 @@
 
 // A test that checks if implicit/explicit dereference works properly when doing weak updates
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 struct I32 {
     content: i32,

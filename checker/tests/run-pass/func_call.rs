@@ -6,7 +6,7 @@
 
 // A test that uses a function summary.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 struct Foo {
     x: i32,

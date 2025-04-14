@@ -6,7 +6,7 @@
 
 // A test that checks that non primitive values can move through a generic copy.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 fn id<T>(x: T) -> T {
     x

@@ -7,7 +7,7 @@
 // A test that dereferences an Arc
 #![allow(dead_code)]
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 use std::sync::Arc;
 

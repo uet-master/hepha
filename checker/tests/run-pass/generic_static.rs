@@ -6,7 +6,7 @@
 
 // Checks that trait implementations with constant overrides are handled correctly.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub trait T {
     const FOO: bool = false;

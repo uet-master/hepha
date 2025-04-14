@@ -5,7 +5,7 @@
 
 use crate::expression::Expression;
 
-use mirai_annotations::{get_model_field, precondition, set_model_field};
+use hepha_annotations::{get_model_field, precondition, set_model_field};
 use serde::{Deserialize, Serialize};
 
 /// The result of using the solver to solve an expression.
@@ -19,7 +19,7 @@ pub enum SmtResult {
     Undefined,
 }
 
-/// The functionality that a solver must expose in order for MIRAI to use it.
+/// The functionality that a solver must expose in order for HEPHA to use it.
 pub trait SmtSolver<SmtExpressionType> {
     /// Returns a string representation of the given expression for use in debugging.
     fn as_debug_string(&self, expression: &SmtExpressionType) -> String;
@@ -32,8 +32,8 @@ pub trait SmtSolver<SmtExpressionType> {
         precondition!(get_model_field!(&self, number_of_backtracks, 0) > 0);
     }
 
-    /// Translate the MIRAI expression into a corresponding expression for the Solver.
-    fn get_as_smt_predicate(&self, mirai_expression: &Expression) -> SmtExpressionType;
+    /// Translate the HEPHA expression into a corresponding expression for the Solver.
+    fn get_as_smt_predicate(&self, hepha_expression: &Expression) -> SmtExpressionType;
 
     /// Provides a string that contains a set of variable assignments that satisfied the
     /// assertions in the solver. Can only be called after self.solve return SmtResult::Satisfiable.
@@ -84,7 +84,7 @@ impl SmtSolver<usize> for SolverStub {
 
     fn backtrack(&self) {}
 
-    fn get_as_smt_predicate(&self, _mirai_expression: &Expression) -> usize {
+    fn get_as_smt_predicate(&self, _hepha_expression: &Expression) -> usize {
         0
     }
 

@@ -6,7 +6,7 @@
 
 // A test that first assumes something that is unprovable and then relies on it to "prove" a verify condition
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn t1() {
     foo1(2); // This breaks an assumed pre-condition and leads to a runtime failure.

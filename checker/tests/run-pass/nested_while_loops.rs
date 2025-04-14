@@ -5,7 +5,7 @@
 //
 // Tests a nested loop that uses a loop variable from the outer loop to modify the inner loop variable
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     let mut i = 1;

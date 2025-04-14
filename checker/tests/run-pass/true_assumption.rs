@@ -5,9 +5,9 @@
 //
 
 // A test that uses a true assumption
-// MIRAI_FLAGS -- -Z mir-opt-level=0
+// HEPHA_FLAGS -- -Z mir-opt-level=0
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn test_assume() {
     let i = 1;

@@ -8,7 +8,7 @@
 #![allow(internal_features)]
 #![feature(core_intrinsics)]
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn t1() -> u8 {
     unsafe {

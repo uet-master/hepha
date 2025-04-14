@@ -10,7 +10,7 @@ use std::rc::Rc;
 
 use log_derive::*;
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 use rustc_hir::def_id::DefId;
 use rustc_index::{Idx, IndexVec};
 use rustc_middle::mir;
@@ -628,7 +628,7 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
         // from local variables of the callee function.
         // This situation arises when a structured value stored in a local variable is assigned to
         // a field reachable from a mutable parameter.
-        // We assume that no program that does not make MIRAI run out of memory will have more than
+        // We assume that no program that does not make HEPHA run out of memory will have more than
         // a million local variables.
         self.bv.fresh_variable_offset += 1_000_000;
 
@@ -1782,7 +1782,7 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
             .cv
             .session
             .dcx()
-            .struct_span_warn(span, "Inline assembly code cannot be analyzed by MIRAI.");
+            .struct_span_warn(span, "Inline assembly code cannot be analyzed by HEPHA.");
         self.bv.emit_diagnostic(warning);
         // Don't stop the analysis if we are building a call graph.
         self.bv.analysis_is_incomplete = self.bv.cv.options.call_graph_config.is_none();
@@ -2888,7 +2888,7 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
         }
     }
 
-    /// Synthesizes a MIRAI constant value from an unevaluated mir constant which is not part of the type system.
+    /// Synthesizes a HEPHA constant value from an unevaluated mir constant which is not part of the type system.
     #[logfn_inputs(TRACE)]
     pub fn visit_unevaluated_const(
         &mut self,
@@ -2967,7 +2967,7 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
         self.bv.lookup_path_and_refine_result(path, lty)
     }
 
-    /// Synthesizes a MIRAI constant value from a RustC constant as used in the type system
+    /// Synthesizes a HEPHA constant value from a RustC constant as used in the type system
     #[logfn_inputs(TRACE)]
     pub fn visit_const(&mut self, literal: &Const<'tcx>) -> Rc<AbstractValue> {
         let mut kind = literal.kind();
@@ -3136,7 +3136,7 @@ impl<'block, 'analysis, 'compilation, 'tcx> BlockVisitor<'block, 'analysis, 'com
     /// This represents things the type system cannot handle (e.g. pointers), as well as
     /// everything else. The representation mirrors that of the actual runtime representation,
     /// presumably because these values are used and produced by MIRI.
-    /// Sadly, this means that MIRAI has to have a lot of duplicated logic.
+    /// Sadly, this means that HEPHA has to have a lot of duplicated logic.
     #[logfn_inputs(TRACE)]
     fn visit_const_value(&mut self, val: ConstValue<'tcx>, lty: Ty<'tcx>) -> Rc<AbstractValue> {
         match val {

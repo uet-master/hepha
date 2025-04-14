@@ -12,7 +12,7 @@ use std::time::Instant;
 use log_derive::*;
 use rpds::HashTrieMap;
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 use rustc_errors::Diag;
 use rustc_hir::def_id::DefId;
 use rustc_middle::mir;
@@ -319,7 +319,7 @@ impl<'analysis, 'compilation, 'tcx> BodyVisitor<'analysis, 'compilation, 'tcx> {
     }
 
     fn report_timeout(&mut self, elapsed_time_in_seconds: u64) {
-        // This body is beyond MIRAI for now
+        // This body is beyond HEPHA for now
         if self.cv.options.diag_level != DiagLevel::Default {
             let warning = self
                 .cv
@@ -343,7 +343,7 @@ impl<'analysis, 'compilation, 'tcx> BodyVisitor<'analysis, 'compilation, 'tcx> {
 
     /// Adds the given diagnostic builder to the buffer.
     /// Buffering diagnostics gives us the chance to sort them before printing them out,
-    /// which is desirable for tools that compare the diagnostics from one run of MIRAI with another.
+    /// which is desirable for tools that compare the diagnostics from one run of HEPHA with another.
     #[logfn_inputs(TRACE)]
     pub fn emit_diagnostic(&mut self, diagnostic_builder: Diag<'compilation, ()>) {
         if (self.treat_as_foreign || !self.def_id.is_local())

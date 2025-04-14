@@ -6,7 +6,7 @@
 
 // A test that checks that size_of::<T>() is handled correctly for a struct
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 use std::mem::size_of;
 
 pub struct Foo {

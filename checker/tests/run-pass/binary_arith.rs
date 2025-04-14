@@ -6,7 +6,7 @@
 
 // Tests constant folding of arithmetic binary operations
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     tu8();

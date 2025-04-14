@@ -595,19 +595,19 @@ impl KnownNamesCache {
                     "ops" => get_known_name_for_ops_namespace(def_path_data_iter),
                     "panicking" => get_known_name_for_panicking_namespace(def_path_data_iter),
                     "ptr" => get_known_name_for_ptr_namespace(def_path_data_iter),
-                    "mirai_abstract_value" => KnownNames::MiraiAbstractValue,
-                    "mirai_add_tag" => KnownNames::MiraiAddTag,
-                    "mirai_assume" => KnownNames::MiraiAssume,
-                    "mirai_assume_preconditions" => KnownNames::MiraiAssumePreconditions,
-                    "mirai_does_not_have_tag" => KnownNames::MiraiDoesNotHaveTag,
-                    "mirai_get_model_field" => KnownNames::MiraiGetModelField,
-                    "mirai_has_tag" => KnownNames::MiraiHasTag,
-                    "mirai_postcondition" => KnownNames::MiraiPostcondition,
-                    "mirai_precondition_start" => KnownNames::MiraiPreconditionStart,
-                    "mirai_precondition" => KnownNames::MiraiPrecondition,
-                    "mirai_result" => KnownNames::MiraiResult,
-                    "mirai_set_model_field" => KnownNames::MiraiSetModelField,
-                    "mirai_verify" => KnownNames::MiraiVerify,
+                    "hepha_abstract_value" => KnownNames::MiraiAbstractValue,
+                    "hepha_add_tag" => KnownNames::MiraiAddTag,
+                    "hepha_assume" => KnownNames::MiraiAssume,
+                    "hepha_assume_preconditions" => KnownNames::MiraiAssumePreconditions,
+                    "hepha_does_not_have_tag" => KnownNames::MiraiDoesNotHaveTag,
+                    "hepha_get_model_field" => KnownNames::MiraiGetModelField,
+                    "hepha_has_tag" => KnownNames::MiraiHasTag,
+                    "hepha_postcondition" => KnownNames::MiraiPostcondition,
+                    "hepha_precondition_start" => KnownNames::MiraiPreconditionStart,
+                    "hepha_precondition" => KnownNames::MiraiPrecondition,
+                    "hepha_result" => KnownNames::MiraiResult,
+                    "hepha_set_model_field" => KnownNames::MiraiSetModelField,
+                    "hepha_verify" => KnownNames::MiraiVerify,
                     "raw_vec" => get_known_name_for_raw_vec_namespace(def_path_data_iter),
                     "rt" => get_known_name_for_panicking_namespace(def_path_data_iter),
                     "slice" => get_known_name_for_slice_namespace(def_path_data_iter),
@@ -619,7 +619,7 @@ impl KnownNamesCache {
 
         let crate_name = tcx.crate_name(def_id.krate);
         match crate_name.as_str() {
-            "alloc" | "core" | "mirai_annotations" | "std" => {
+            "alloc" | "core" | "hepha_annotations" | "std" => {
                 get_known_name_for_known_crate(def_path_data_iter)
             }
             _ => KnownNames::None,

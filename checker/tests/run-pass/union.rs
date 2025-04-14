@@ -6,7 +6,7 @@
 
 // A test that checks that a value is tracked through a union.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub const fn as_bytes(_self: &str) -> &[u8] {
     union Slices<'a> {

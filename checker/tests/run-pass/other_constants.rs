@@ -6,7 +6,7 @@
 
 // A test that exercises the non numeric parts of visit_constant.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub enum Foo {
     Bar,

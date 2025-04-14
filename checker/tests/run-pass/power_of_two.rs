@@ -6,7 +6,7 @@
 
 // A test that calls is_power_of_two.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     verify!(4u8.is_power_of_two());

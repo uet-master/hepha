@@ -6,7 +6,7 @@
 
 // A test that checks that a fat pointer can be tracked over a union with a thin pointer.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 use std::mem::ManuallyDrop;
 
 #[repr(C)]

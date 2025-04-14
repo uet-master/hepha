@@ -6,7 +6,7 @@
 
 // A test that checks that assume_preconditions! works
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     assume_preconditions!();

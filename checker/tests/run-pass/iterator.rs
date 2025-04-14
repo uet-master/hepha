@@ -7,7 +7,7 @@
 
 #![feature(step_trait)]
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn test1() {
     let mut it = std::ops::Range {

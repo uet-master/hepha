@@ -6,7 +6,7 @@
 
 // A test that promotes a constant to static memory by taking its address.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     let x = &1;

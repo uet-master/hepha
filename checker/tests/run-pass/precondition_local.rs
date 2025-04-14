@@ -5,7 +5,7 @@
 
 // A test that infers a precondition from a loop invariant
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 fn test(v: &[i32]) {
     let mut i = 0;

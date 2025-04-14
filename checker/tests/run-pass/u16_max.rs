@@ -6,7 +6,7 @@
 
 // A test that checks that std::u16::MAX is set correctly
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     verify!(std::u16::MAX == 65535);

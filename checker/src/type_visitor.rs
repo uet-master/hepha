@@ -11,7 +11,7 @@ use std::rc::Rc;
 
 use log_derive::*;
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 use rustc_hir::def_id::DefId;
 use rustc_index::Idx;
 use rustc_middle::mir;

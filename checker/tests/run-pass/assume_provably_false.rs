@@ -6,7 +6,7 @@
 
 // A test that checks that a provably false assumption is ignored
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     let a = 5;

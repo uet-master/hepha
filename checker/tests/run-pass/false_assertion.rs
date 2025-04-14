@@ -6,7 +6,7 @@
 
 // A test that uses a false assertion
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     let i = 1;

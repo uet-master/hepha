@@ -15,7 +15,7 @@
 #![feature(rustc_private)]
 #![allow(unexpected_cfgs)]
 
-extern crate mirai;
+extern crate hepha;
 extern crate rayon;
 extern crate rustc_ast;
 extern crate rustc_data_structures;
@@ -37,11 +37,11 @@ use serde::Deserialize;
 use tempfile::TempDir;
 use walkdir::WalkDir;
 
-use mirai::call_graph::{CallGraphConfig, CallGraphReduction, DatalogBackend, DatalogConfig};
-use mirai::callbacks;
-use mirai::options::{DiagLevel, Options};
-use mirai::utils;
-use mirai_annotations::{assume, unrecoverable};
+use hepha::call_graph::{CallGraphConfig, CallGraphReduction, DatalogBackend, DatalogConfig};
+use hepha::callbacks;
+use hepha::options::{DiagLevel, Options};
+use hepha::utils;
+use hepha_annotations::{assume, unrecoverable};
 
 // Run the tests in the tests/run-pass directory.
 // Eventually, there will be separate test cases for other directories such as compile-fail.
@@ -49,8 +49,8 @@ use mirai_annotations::{assume, unrecoverable};
 fn run_pass() {
     let extern_deps = vec![
         (
-            "mirai_annotations",
-            find_extern_library("mirai_annotations"),
+            "hepha_annotations",
+            find_extern_library("hepha_annotations"),
         ),
         ("contracts", find_extern_library("contracts")),
     ];
@@ -225,7 +225,7 @@ fn invoke_driver_on_files(
     extern_deps: Vec<(&'static str, String)>,
     driver: &fn(DriverConfig) -> usize,
 ) -> usize {
-    if option_env!("MIRAI_SINGLE").is_some() {
+    if option_env!("HEPHA_SINGLE").is_some() {
         files_and_temp_dirs
             .into_iter()
             .fold(0, |acc, (file_name, temp_dir_path)| {
@@ -266,7 +266,7 @@ fn invoke_driver(
     let mut rustc_args = vec![]; // any arguments after `--` for rustc
     {
         let file_content = read_to_string(Path::new(&file_name)).unwrap();
-        let options_re = Regex::new(r"(?m)^\s*//\s*MIRAI_FLAGS\s(?P<flags>.*)$").unwrap();
+        let options_re = Regex::new(r"(?m)^\s*//\s*HEPHA_FLAGS\s(?P<flags>.*)$").unwrap();
         if let Some(captures) = options_re.captures(&file_content) {
             rustc_args = options.parse_from_str(&captures["flags"], early_error_handler, true);
             // override based on test source
@@ -275,7 +275,7 @@ fn invoke_driver(
 
     // Setup rustc call.
     let mut command_line_arguments: Vec<String> = vec![
-        String::from("--crate-name mirai"),
+        String::from("--crate-name hepha"),
         file_name.clone(),
         String::from("--crate-type"),
         String::from("lib"),

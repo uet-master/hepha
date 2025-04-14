@@ -13,7 +13,7 @@ use lazy_static::lazy_static;
 use log::debug;
 use log_derive::*;
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 use crate::abstract_value::AbstractValue;
 use crate::abstract_value::AbstractValueTrait;
@@ -145,9 +145,9 @@ impl SmtSolver<Z3ExpressionType> for Z3Solver {
     }
 
     #[logfn_inputs(TRACE)]
-    fn get_as_smt_predicate(&self, mirai_expression: &Expression) -> Z3ExpressionType {
+    fn get_as_smt_predicate(&self, hepha_expression: &Expression) -> Z3ExpressionType {
         let _guard = Z3_MUTEX.lock().unwrap();
-        self.get_as_bool_z3_ast(mirai_expression)
+        self.get_as_bool_z3_ast(hepha_expression)
     }
 
     #[logfn_inputs(TRACE)]

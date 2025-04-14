@@ -1,10 +1,10 @@
 [package]
 
-name = "mirai"
+name = "hepha"
 version = "1.1.10"
 authors = ["Herman Venter <herman_venter@msn.com>"]
 description = "A static analysis tool for Rust, based on Abstract Interpretation of MIR"
-repository = "https://github.com/endorlabs/MIRAI"
+repository = "https://github.com/endorlabs/HEPHA"
 readme = "../README.md"
 license = "MIT"
 edition = "2021"
@@ -15,13 +15,13 @@ test = false # we have no unit tests
 doctest = false # and no doc tests
 
 [[bin]]
-name = "cargo-mirai"
-path = "src/cargo_mirai.rs"
+name = "cargo-hepha"
+path = "src/cargo_hepha.rs"
 test = false # we have no unit tests
 doctest = false # and no doc tests
 
 [[bin]]
-name = "mirai"
+name = "hepha"
 path = "src/main.rs"
 test = false # we have no unit tests
 doctest = false # and no doc tests
@@ -36,7 +36,7 @@ itertools = "*"
 lazy_static = "*"
 log = "*"
 log-derive = "*"
-mirai-annotations = { path = "../annotations" }
+hepha-annotations = { path = "../annotations" }
 petgraph = "*"
 proc-macro2 = "*"
 rand = "*"
@@ -62,7 +62,7 @@ walkdir = "*"
 # or similar, and to integration_tests.rs (search for extern_deps there).
 # We set the dep to a specific revision, so we don't get paths as above no longer working after update of the repo
 # and the Cargo.lock.
-contracts = { version = "*", features = ["mirai_assertions"] }
+contracts = "*"
 
 [features]
 default = ["bundled"]

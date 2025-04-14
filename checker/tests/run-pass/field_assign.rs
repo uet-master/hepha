@@ -6,7 +6,7 @@
 
 // A test that visits the ProjectionElem::Field case of Visitor::visit_projection_elem
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub struct Test {
     pub field: usize,

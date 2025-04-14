@@ -6,7 +6,7 @@
 
 // A test that exercises visit_used_copy with a structured value.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 #[derive(Clone, Copy)]
 struct Point {

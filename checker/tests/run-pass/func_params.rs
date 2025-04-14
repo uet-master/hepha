@@ -6,7 +6,7 @@
 
 // A test that uses a function parameter
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 fn bar(x: Option<i32>, j: i32) -> Option<i32> {
     match x {

@@ -6,7 +6,7 @@
 
 // A test that takes the address of a local copy of a parameter of type struct
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 #[derive(Clone, Copy)]
 struct Foo {

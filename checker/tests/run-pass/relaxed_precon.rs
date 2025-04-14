@@ -6,9 +6,9 @@
 
 // A test that checks relaxed mode preconditions
 
-// MIRAI_FLAGS --diag=default
+// HEPHA_FLAGS --diag=default
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 fn foo(i: i32) {
     precondition!(i > 3); //~ related location

@@ -6,7 +6,7 @@
 
 // A test that uses an explicit post condition.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub struct Block {
     round: u64,

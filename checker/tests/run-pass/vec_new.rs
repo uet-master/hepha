@@ -6,7 +6,7 @@
 
 // A test that uses built-in contracts for the Vec struct.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     let v: Vec<i32> = Vec::new();

@@ -6,7 +6,7 @@
 
 // Tests reasoning over bitwise not operations
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn signed_arith(i: i8) {
     precondition!(!i < i8::max_value());

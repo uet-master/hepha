@@ -10,7 +10,7 @@
 #![feature(core_intrinsics)]
 #![allow(unused)]
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 use std::intrinsics;
 

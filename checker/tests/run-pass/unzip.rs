@@ -6,7 +6,7 @@
 
 // A test that calls Iterator::unzip
 
-// use mirai_annotations::*;
+// use hepha_annotations::*;
 
 pub fn test() {
     // let a = [(1, 2), (3, 4)];

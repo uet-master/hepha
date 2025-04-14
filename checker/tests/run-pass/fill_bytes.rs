@@ -6,7 +6,7 @@
 
 // A regression test that does a lot of heap stuff.
 
-// MIRAI_FLAGS --diag=verify
+// HEPHA_FLAGS --diag=verify
 
 #[cfg(not(windows))]
 use std::cell::UnsafeCell;

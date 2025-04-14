@@ -7,7 +7,7 @@
 // A test that uses checked_add
 #![allow(dead_code)]
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub struct Foo {
     capacity: usize,

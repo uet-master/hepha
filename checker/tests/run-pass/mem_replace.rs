@@ -6,7 +6,7 @@
 
 // Tests for std::mem::replace
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 use std::mem;
 

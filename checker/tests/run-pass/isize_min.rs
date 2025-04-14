@@ -6,7 +6,7 @@
 
 // A test that checks that std::isize::MIN is set correctly
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 #[cfg(any(
     target_arch = "x86",

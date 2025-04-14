@@ -6,7 +6,7 @@
 
 // A test that checks that fixed size arrays passed as parameters are copied when de-referenced
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 fn f(arr: &mut [i32; 3]) {
     arr[2] = 345;

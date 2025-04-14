@@ -6,7 +6,7 @@
 
 // This tests the Vector clear method
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     let mut v: Vec<i32> = Vec::new();

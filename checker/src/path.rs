@@ -13,7 +13,7 @@ use std::rc::Rc;
 use log_derive::*;
 use serde::{Deserialize, Serialize};
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 use rustc_hir::def_id::DefId;
 use rustc_middle::ty::{Ty, TyCtxt};
 
@@ -1306,7 +1306,7 @@ pub enum PathSelector {
     Downcast(Rc<str>, usize, Rc<AbstractValue>),
 
     /// Select the struct model field with the given name.
-    /// A model field is a specification construct used during MIRAI verification
+    /// A model field is a specification construct used during HEPHA verification
     /// and does not have a runtime location.
     ModelField(Rc<str>),
 

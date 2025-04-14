@@ -5,7 +5,7 @@
 //
 
 // Test case that ensures that a CROOT node is not duplicated if it
-// is analyzed by MIRAI after MIRAI analyzed its first call.
+// is analyzed by HEPHA after HEPHA analyzed its first call.
 
 pub fn main() {
     fn1();

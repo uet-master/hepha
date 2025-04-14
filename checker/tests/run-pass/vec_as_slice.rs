@@ -6,7 +6,7 @@
 
 // This tests de-referencing a vector inside a transparent wrapper
 
-// use mirai_annotations::*;
+// use hepha_annotations::*;
 
 #[repr(transparent)]
 pub struct Buf {

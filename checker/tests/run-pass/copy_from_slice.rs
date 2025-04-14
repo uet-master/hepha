@@ -5,7 +5,7 @@
 
 #![allow(internal_features)]
 #![feature(core_intrinsics)]
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 // A test that does a slice to slice copy where the underlying storage of the target slice is
 // not the same length as the source slice.

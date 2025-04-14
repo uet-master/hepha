@@ -7,7 +7,7 @@
 // A test that checks that array index assignments get weakened appropriately inside loop bodies
 
 //todo: fix timeout
-// use mirai_annotations::*;
+// use hepha_annotations::*;
 //
 // pub fn plus_one(key: [u8; 32]) {
 //     let mut buf = key.to_vec();

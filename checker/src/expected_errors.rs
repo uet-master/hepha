@@ -11,7 +11,7 @@ use std::str::FromStr;
 
 use log_derive::logfn_inputs;
 
-use mirai_annotations::assume;
+use hepha_annotations::assume;
 use rustc_errors::Diag;
 use rustc_errors::{DiagMessage, MultiSpan};
 

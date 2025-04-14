@@ -6,7 +6,7 @@
 
 // A test that checks if expressions like x == x can be simplified.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     foo(1, 2.0);

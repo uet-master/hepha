@@ -6,7 +6,7 @@
 
 // A test that uses a static array.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 static POWERS_10: [u32; 10] = [
     1,

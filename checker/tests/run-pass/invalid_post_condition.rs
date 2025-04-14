@@ -4,7 +4,7 @@
 // LICENSE file in the root directory of this source tree.
 //
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub struct Block {
     round: u64,

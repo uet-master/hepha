@@ -9,10 +9,10 @@
 #![allow(incomplete_features)]
 
 #[macro_use]
-extern crate mirai_annotations;
+extern crate hepha_annotations;
 
 pub mod propagation_on_empty_struct {
-    use mirai_annotations::TagPropagationSet;
+    use hepha_annotations::TagPropagationSet;
 
     struct SecretTaintKind<const MASK: TagPropagationSet> {}
 

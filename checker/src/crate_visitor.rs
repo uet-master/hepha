@@ -5,7 +5,7 @@
 
 // 'compilation is the lifetime of compiler interface object supplied to the after_analysis call back.
 // 'tcx is the lifetime of the type context created during the lifetime of the after_analysis call back.
-// 'analysis is the life time of the analyze_with_mirai call back that is invoked with the type context.
+// 'analysis is the life time of the analyze_with_hepha call back that is invoked with the type context.
 
 use std::cell::RefCell;
 use std::cmp::Ordering;
@@ -17,7 +17,7 @@ use std::time::Instant;
 use log::*;
 use log_derive::{logfn, logfn_inputs};
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 use rustc_errors::Diag;
 use rustc_hir::def_id::{DefId, DefIndex};
 use rustc_middle::mir;
@@ -40,7 +40,7 @@ use crate::utils;
 /// and implicit assertions in the MIR bodies might be false and generates warning for those.
 ///
 // 'compilation is the lifetime of the call to MiraiCallbacks::after_analysis.
-// 'tcx is the lifetime of the closure call that calls analyze_with_mirai, which calls analyze_some_bodies.
+// 'tcx is the lifetime of the closure call that calls analyze_with_hepha, which calls analyze_some_bodies.
 pub struct CrateVisitor<'compilation, 'tcx> {
     pub buffered_diagnostics: Vec<Diag<'compilation, ()>>,
     pub constant_time_tag_cache: Option<Tag>,
@@ -81,7 +81,7 @@ impl<'compilation> CrateVisitor<'compilation, '_> {
         };
 
         // Analyze all functions that are whitelisted or public
-        let building_standard_summaries = std::env::var("MIRAI_START_FRESH").is_ok();
+        let building_standard_summaries = std::env::var("HEPHA_START_FRESH").is_ok();
         for local_def_id in self.tcx.hir().body_owners() {
             let def_id = local_def_id.to_def_id();
             let name = utils::summary_key_str(self.tcx, def_id);

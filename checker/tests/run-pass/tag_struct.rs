@@ -9,10 +9,10 @@
 #![allow(incomplete_features)]
 
 #[macro_use]
-extern crate mirai_annotations;
+extern crate hepha_annotations;
 
 pub mod with_propagation_to_sub_components {
-    use mirai_annotations::{TagPropagation, TagPropagationSet};
+    use hepha_annotations::{TagPropagation, TagPropagationSet};
 
     struct SecretTaintKind<const MASK: TagPropagationSet> {}
 
@@ -97,7 +97,7 @@ pub mod with_propagation_to_sub_components {
 }
 
 pub mod without_propagation_to_sub_components {
-    use mirai_annotations::TagPropagationSet;
+    use hepha_annotations::TagPropagationSet;
 
     struct SecretTaintKind<const MASK: TagPropagationSet> {}
 

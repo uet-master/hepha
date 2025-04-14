@@ -6,10 +6,10 @@
 
 // Tests for annotations from the contracts crate.
 
-// MIRAI_FLAGS --test_only
+// HEPHA_FLAGS --test_only
 
 use contracts::*;
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     use_pre_post();

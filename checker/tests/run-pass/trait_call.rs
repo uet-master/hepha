@@ -6,9 +6,9 @@
 
 // Checks that calls via traits can be resolved if call site has enough type information
 
-// MIRAI_FLAGS --diag=library
+// HEPHA_FLAGS --diag=library
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub trait Tr {
     fn bar(&self) -> i32;

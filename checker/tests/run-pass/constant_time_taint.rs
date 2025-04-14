@@ -5,12 +5,12 @@
 
 // A test for verifying constant-time security via taint analysis
 
-// MIRAI_FLAGS --constant_time ConstantTimeTaintKind
+// HEPHA_FLAGS --constant_time ConstantTimeTaintKind
 
 #![feature(generic_const_exprs)]
 #![allow(incomplete_features)]
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 struct ConstantTimeTaintKind<const MASK: TagPropagationSet> {}
 

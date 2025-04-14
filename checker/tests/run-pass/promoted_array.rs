@@ -9,7 +9,7 @@
 //todo: This is the only way I can find to generate such literals.
 // Find out for sure if there is no other way.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 fn g(x: &[u8], y: &[u8]) -> bool {
     x[0] == y[0]

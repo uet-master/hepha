@@ -6,7 +6,7 @@
 
 // A test that assigns to a location that is unknown at compile time.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     do_join(true);

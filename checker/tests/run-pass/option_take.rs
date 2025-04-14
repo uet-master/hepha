@@ -4,7 +4,7 @@
 // LICENSE file in the root directory of this source tree.
 //
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 fn take_out(menu: &mut Option<i32>) -> i32 {
     menu.take().unwrap()

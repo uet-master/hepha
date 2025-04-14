@@ -6,7 +6,7 @@
 
 // A test that use enum discriminants
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub enum Path {
     QualifiedPath { length: usize, qualifier: Box<Path> },

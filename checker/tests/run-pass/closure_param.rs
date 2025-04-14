@@ -6,7 +6,7 @@
 
 // A test that uses a closure call result that includes a closed over variable value.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 fn foo<F>(f: F) -> i32
 where

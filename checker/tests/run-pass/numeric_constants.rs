@@ -6,7 +6,7 @@
 
 // A test that exercises the numeric parts of visit_constant.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub static A: isize = -1;
 pub static B: usize = 2;

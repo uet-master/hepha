@@ -6,7 +6,7 @@
 
 // A test that adds a precondition to an async function
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 async fn foo(i: i32, j: i32) -> i32 {
     precondition!(i > j); // ~ related location

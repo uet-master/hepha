@@ -6,7 +6,7 @@
 
 // A test that checks various simplifications
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn f1(b: bool) {
     verify!(b || !b);

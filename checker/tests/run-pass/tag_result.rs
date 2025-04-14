@@ -8,7 +8,7 @@
 #![feature(generic_const_exprs)]
 #![allow(incomplete_features)]
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 struct SecretTaintKind<const MASK: TagPropagationSet> {}
 

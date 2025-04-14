@@ -10,7 +10,7 @@
 #![feature(coroutines)]
 #![feature(stmt_expr_attributes)]
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 use std::arch::asm;
 use std::mem;
@@ -75,7 +75,7 @@ fn test4() {
 
 pub fn test5() {
     unsafe {
-        asm!("NOP") //~ Inline assembly code cannot be analyzed by MIRAI.
+        asm!("NOP") //~ Inline assembly code cannot be analyzed by HEPHA.
     }
 }
 

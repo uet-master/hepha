@@ -9,7 +9,7 @@ use std::rc::Rc;
 use log::debug;
 use log_derive::{logfn, logfn_inputs};
 
-use mirai_annotations::assume_unreachable;
+use hepha_annotations::assume_unreachable;
 use rustc_hir::def::DefKind;
 use rustc_hir::def_id::DefId;
 use rustc_hir::definitions::{DefPathData, DisambiguatedDefPathData};

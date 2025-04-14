@@ -6,7 +6,7 @@
 
 // A test that verifies that s.is_empty() returns true for an empty string.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     let s = "";

@@ -6,7 +6,7 @@
 
 // A test that uses paths containing base addresses.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub struct Foo {
     pub x: i32,

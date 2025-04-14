@@ -12,7 +12,7 @@
 
 #![allow(non_snake_case)]
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub mod foreign_contracts {
     pub mod def_id_not_unique {

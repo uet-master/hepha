@@ -6,7 +6,7 @@
 
 // A test that checks that usize::max_value() is set correctly
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 #[cfg(any(
     target_arch = "x86",

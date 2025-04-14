@@ -6,7 +6,7 @@
 
 // A test that visits the ProjectionElem::Downcast case of Visitor::visit_projection_elem
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub enum Foo {
     Bar1(i32),

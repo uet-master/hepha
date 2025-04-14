@@ -16,17 +16,17 @@
 #![allow(unexpected_cfgs)]
 
 extern crate env_logger;
-extern crate mirai;
+extern crate hepha;
 extern crate rustc_driver;
 extern crate rustc_interface;
 extern crate rustc_session;
 
 use itertools::Itertools;
 use log::*;
-use mirai::callbacks;
-use mirai::options::Options;
-use mirai::utils;
-use mirai_annotations::*;
+use hepha::callbacks;
+use hepha::options::Options;
+use hepha::utils;
+use hepha_annotations::*;
 use std::env;
 use std::path::Path;
 
@@ -38,21 +38,21 @@ fn main() {
     if env::var("RUSTC_LOG").is_ok() {
         rustc_driver::init_rustc_env_logger(&early_error_handler);
     }
-    if env::var("MIRAI_LOG").is_ok() {
+    if env::var("HEPHA_LOG").is_ok() {
         let e = env_logger::Env::new()
-            .filter("MIRAI_LOG")
-            .write_style("MIRAI_LOG_STYLE");
+            .filter("HEPHA_LOG")
+            .write_style("HEPHA_LOG_STYLE");
         env_logger::init_from_env(e);
     }
 
-    // Get any options specified via the MIRAI_FLAGS environment variable
+    // Get any options specified via the HEPHA_FLAGS environment variable
     let mut options = Options::default();
     let rustc_args = options.parse_from_str(
-        &env::var("MIRAI_FLAGS").unwrap_or_default(),
+        &env::var("HEPHA_FLAGS").unwrap_or_default(),
         &early_error_handler,
         false,
     );
-    info!("MIRAI options from environment: {:?}", options);
+    info!("HEPHA options from environment: {:?}", options);
 
     // Let arguments supplied on the command line override the environment variable.
     let mut args = env::args_os()
@@ -73,7 +73,7 @@ fn main() {
     }
 
     let mut rustc_command_line_arguments = options.parse(&args[1..], &early_error_handler, false);
-    info!("MIRAI options modified by command line: {:?}", options);
+    info!("HEPHA options modified by command line: {:?}", options);
 
     rustc_driver::install_ice_hook(rustc_driver::DEFAULT_BUG_REPORT_URL, |_| ());
     let result = rustc_driver::catch_fatal_errors(|| {
@@ -86,11 +86,11 @@ fn main() {
             .any(|arg| arg.starts_with(&print))
         {
             // If a --print option is given on the command line we wont get called to analyze
-            // anything. We also don't want to the caller to know that MIRAI adds configuration
+            // anything. We also don't want to the caller to know that HEPHA adds configuration
             // parameters to the command line, lest the caller be cargo and it panics because
             // the output from --print=cfg is not what it expects.
         } else {
-            // Add rustc arguments supplied via the MIRAI_FLAGS environment variable
+            // Add rustc arguments supplied via the HEPHA_FLAGS environment variable
             rustc_command_line_arguments.extend(rustc_args);
 
             let sysroot: String = "--sysroot".into();
@@ -115,7 +115,7 @@ fn main() {
             }
 
             if options.test_only {
-                let prefix: String = "mirai_annotations=".into();
+                let prefix: String = "hepha_annotations=".into();
                 let postfix: String = ".rmeta".into();
 
                 if let Some((_, s)) = rustc_command_line_arguments

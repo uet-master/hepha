@@ -6,7 +6,7 @@
 // A test that checks that bit counting operations have return results that are constrained
 // beyond their type signature.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn t1(bit_map: u8) {
     let ones = bit_map.count_ones();

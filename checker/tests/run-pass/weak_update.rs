@@ -6,7 +6,7 @@
 
 // A test that does a weak update of an array element
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn test1(i: usize) {
     precondition!(i < 3);

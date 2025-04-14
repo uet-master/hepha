@@ -6,7 +6,7 @@
 
 // Tests if intervals satisfy relational constraints
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn t1(cond: bool) {
     let interval = if cond { -2 } else { 1000000 };

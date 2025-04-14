@@ -6,7 +6,7 @@
 
 // Check that self recursive calls happening via trait methods are detected.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub trait X {
     fn foo() -> usize;

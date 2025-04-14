@@ -7,7 +7,7 @@ use log_derive::*;
 use rpds::{rbt_map, RedBlackTreeMap};
 use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 use rustc_hir::def_id::{CrateNum, DefId, DefIndex};
 
 use crate::bool_domain::BoolDomain;
@@ -115,7 +115,7 @@ impl Tag {
 /// to Booleans, i.e., we represent sets as Boolean-valued maps. For example, suppose that in total
 /// we have 3 tags `A`, `B`, and `C`. Then the set {`A`, `B`} is represented as {`A` -> true, `B`
 /// -> true, `C` -> false}. By abstract interpretation, an abstract tag domain element should
-/// represent a set of such Boolean-valued maps. We implement a coarser abstraction in MIRAI.
+/// represent a set of such Boolean-valued maps. We implement a coarser abstraction in HEPHA.
 /// Noticing that tags are independent of each other, we define the abstraction as the Cartesian
 /// product of abstractions for each tag. In the concrete semantics, for each tag, we record a
 /// Boolean value; thus, in the abstract semantics, for each tag, we record a *lifted* Boolean:
@@ -123,7 +123,7 @@ impl Tag {
 /// exist, FALSE={false} indicates that the tag *must not* exist, and BOTTOM={} indicates an
 /// impossible state. A Tag domain element is then a finite map from tag names to lifted Booleans.
 ///
-/// However, MIRAI constructs abstract domain elements on demand, so MIRAI does not know the whole
+/// However, HEPHA constructs abstract domain elements on demand, so HEPHA does not know the whole
 /// set of tags during an analysis. Our solution is to *lazily* record tags in a Tag domain element.
 /// We implement the finite maps using Map data structures (specifically, persistent tree maps).
 /// Intuitively, if a tag is not tracked by a Tag domain element, i.e., it is not in the support of
@@ -131,8 +131,8 @@ impl Tag {
 /// procedural analysis, because local variables don't have any tags initially. However, if an
 /// expression `E` is a path rooted at a function parameter, in the tag abstraction of `E`, we
 /// need to map every tag to TOP which means that we don't know yet if the tag exists or not,
-/// and the tag check result could be refined later when MIRAI has more information from the caller.
-/// Again, because MIRAI works on demand, we don't know the whole set of tags. We add a field
+/// and the tag check result could be refined later when HEPHA has more information from the caller.
+/// Again, because HEPHA works on demand, we don't know the whole set of tags. We add a field
 /// `value_for_untracked_tags` in Tag domain elements to record a lifted Boolean for untracked
 /// tags. For example, in the tag abstraction of a local variable, this field is FALSE, while
 /// in the tag abstraction of a function parameter, this field is TOP.

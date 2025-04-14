@@ -6,7 +6,7 @@
 
 // A test that exercises visit_used_move with a structured value.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 struct Point {
     pub x: i32,

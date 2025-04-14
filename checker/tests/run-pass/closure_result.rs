@@ -6,7 +6,7 @@
 
 // A test that calls a closure returned from a function.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 fn bar() -> impl FnOnce(i32) -> i32 {
     let x = 1;

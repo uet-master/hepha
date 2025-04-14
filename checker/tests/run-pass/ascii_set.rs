@@ -6,7 +6,7 @@
 
 // A test that uses computed constants.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub struct AsciiSet {
     mask: [Chunk; ASCII_RANGE_LEN / BITS_PER_CHUNK],

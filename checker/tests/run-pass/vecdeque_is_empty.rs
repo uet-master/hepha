@@ -6,7 +6,7 @@
 
 // A test for VecDeque::is_empty
 
-// use mirai_annotations::*;
+// use hepha_annotations::*;
 //
 // use std::collections::VecDeque;
 

@@ -6,7 +6,7 @@
 
 // A test that checks that pre-state can be used after modification.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub struct Foo {
     pub bar: *const i32,

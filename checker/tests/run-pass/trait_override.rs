@@ -4,9 +4,9 @@
 // LICENSE file in the root directory of this source tree.
 //
 
-// MIRAI_FLAGS --test_only
+// HEPHA_FLAGS --test_only
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub trait Tr {
     fn virt(&self) -> i32;

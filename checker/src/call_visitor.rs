@@ -11,7 +11,7 @@ use std::{f16, f64};
 
 use log_derive::*;
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 use rustc_hir::def_id::DefId;
 use rustc_middle::mir;
 use rustc_middle::ty::ConstKind;
@@ -770,7 +770,7 @@ impl<'call, 'block, 'analysis, 'compilation, 'tcx>
         }
     }
 
-    /// If the function being called is a special function like mirai_annotations.mirai_verify or
+    /// If the function being called is a special function like hepha_annotations.hepha_verify or
     /// std.panicking.begin_panic then report a diagnostic or create a precondition as appropriate.
     #[logfn_inputs(TRACE)]
     fn report_calls_to_special_functions(&mut self) {
@@ -941,7 +941,7 @@ impl<'call, 'block, 'analysis, 'compilation, 'tcx>
                     // We always get to this call and we have to assume that the function will
                     // get called, so keep the message certain.
                     // Don't, however, complain about panics in the standard contract summaries
-                    if std::env::var("MIRAI_START_FRESH").is_err() {
+                    if std::env::var("HEPHA_START_FRESH").is_err() {
                         let warning = self
                             .block_visitor
                             .bv
@@ -988,8 +988,8 @@ impl<'call, 'block, 'analysis, 'compilation, 'tcx>
                     // Since the assert and panic macros are commonly used to create preconditions
                     // it would be very inconvenient if this possibly false assertion were reported
                     // as a problem since there would be no way to shut it up. We therefore do not
-                    // report this and instead insist that anyone who wants to have MIRAI check
-                    // their assertions should use the mirai_annotations::verify! macro instead.
+                    // report this and instead insist that anyone who wants to have HEPHA check
+                    // their assertions should use the hepha_annotations::verify! macro instead.
                     //
                     // We **do** have to push a precondition since this is the probable intent.
                     if let Some(promotable_entry_condition) = self
@@ -1038,7 +1038,7 @@ impl<'call, 'block, 'analysis, 'compilation, 'tcx>
     }
 
     /// Provides special handling of functions that have no MIR bodies or that need to access
-    /// internal MIRAI state in ways that cannot be expressed in normal Rust and therefore
+    /// internal HEPHA state in ways that cannot be expressed in normal Rust and therefore
     /// cannot be summarized in the standard_contracts crate.
     /// Returns the result of the call, or BOTTOM if the function to call is not a known
     /// special function.
@@ -1238,7 +1238,7 @@ impl<'call, 'block, 'analysis, 'compilation, 'tcx>
     /// 1. A self pointer to the Once object
     /// 2. The closure instance to call.
     ///
-    /// All of this happens in code that is not encoded as MIR, so MIRAI needs built in support for it.
+    /// All of this happens in code that is not encoded as MIR, so HEPHA needs built in support for it.
     #[logfn_inputs(TRACE)]
     fn inline_indirectly_called_function(&mut self) {
         checked_assume!(self.actual_args.len() == 2);
@@ -1830,7 +1830,7 @@ impl<'call, 'block, 'analysis, 'compilation, 'tcx>
             .is_some()
         {
             // Move the model field (path, val) pairs to the target (i.e. the place where
-            // the return value of call to the mirai_get_model_field function would go if
+            // the return value of call to the hepha_get_model_field function would go if
             // it were a normal call.
             self.block_visitor.bv.copy_or_move_elements(
                 target_path,
@@ -3142,7 +3142,7 @@ impl<'call, 'block, 'analysis, 'compilation, 'tcx>
     }
 
     /// Extracts the string from an AbstractDomain that is required to be a reference to a string literal.
-    /// This is the case for helper MIRAI helper functions that are hidden in the documentation
+    /// This is the case for helper HEPHA helper functions that are hidden in the documentation
     /// and that are required to be invoked via macros that ensure that the argument providing
     /// this value is always a string literal.
     #[logfn_inputs(TRACE)]

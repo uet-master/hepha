@@ -6,7 +6,7 @@
 
 // A test that checks that core::cmp::max creates correct summaries
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn test_i8() {
     let val1: i8 = result!();

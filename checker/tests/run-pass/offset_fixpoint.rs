@@ -8,7 +8,7 @@
 
 #![allow(dead_code)]
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 const WORDS: usize = 25;
 

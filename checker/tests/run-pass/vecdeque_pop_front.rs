@@ -6,7 +6,7 @@
 
 // A test for VecDeque::pop_front
 
-// use mirai_annotations::*;
+// use hepha_annotations::*;
 // use std::collections::VecDeque;
 
 pub fn main() {

@@ -5,9 +5,9 @@
 //
 // Tests that Cursor::read_to_end havocs the length of its parameter vector.
 
-// MIRAI_FLAGS --diag=verify --body_analysis_timeout 60
+// HEPHA_FLAGS --diag=verify --body_analysis_timeout 60
 
-// use mirai_annotations::*;
+// use hepha_annotations::*;
 use std::io::{Cursor, Read, Result};
 
 pub fn t1(buf: &[u8]) -> Result<()> {

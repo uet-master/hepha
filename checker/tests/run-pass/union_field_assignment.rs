@@ -7,7 +7,7 @@
 // A test that checks that assignments to one field of a union result in updates of all
 // the union fields, transmuting as necessary.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 #[allow(non_camel_case_types)]
 #[derive(Copy, Clone, PartialEq)]

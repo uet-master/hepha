@@ -6,7 +6,7 @@
 
 // A test that visits the ProjectionElem::Subslice case of Visitor::visit_projection_elem
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub fn main() {
     array_pattern(true);

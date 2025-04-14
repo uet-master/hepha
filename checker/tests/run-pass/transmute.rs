@@ -9,7 +9,7 @@
 #![allow(internal_features)]
 #![feature(core_intrinsics)]
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 
 pub unsafe fn t1(ptr: *mut i32) {
     *ptr = 123;

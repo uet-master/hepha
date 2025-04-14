@@ -4,7 +4,7 @@
 // LICENSE file in the root directory of this source tree.
 //
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 use std::io::{Cursor, Read};
 
 pub fn read_to_end(r: &mut Cursor<&[u8]>, buf: &mut Vec<u8>) {

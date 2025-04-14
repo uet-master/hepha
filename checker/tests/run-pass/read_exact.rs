@@ -10,7 +10,7 @@
 // another slice/index path and hence writing the pre-state value to the post-state
 // (instead of just relying on it being there already) might overwrite a previous effect.
 
-use mirai_annotations::*;
+use hepha_annotations::*;
 use std::io::Read;
 
 fn read_exact(a: &[u8], buf: &mut [u8]) {
