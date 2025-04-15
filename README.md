@@ -9,7 +9,7 @@ Hepha tool analyzes smart contracts written by Rust language to discover vulnera
 - Time manipulation
 - Numerical precision
 
-## Installation Instructions
+## Installation instructions
 
 Install dependencies
 
