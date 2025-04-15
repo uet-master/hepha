@@ -1,6 +1,6 @@
 # 🦔 Hepha
 
-Hepha analyzes smart contracts written by Rust language to discover vulnerabilities. Hepha only detects six types of vulnerabilities as belows.
+Hepha analyzes Solana smart contracts to discover vulnerabilities. Hepha only detects six types of vulnerabilities as belows.
 
 - Reentrancy
 - Underflow
